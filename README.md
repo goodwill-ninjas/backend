@@ -2,9 +2,9 @@
 
 The main REST API backend responsible for serving stateful data for the Blood Donor mobile apps.
 
-### Building & Running
+## Building & Running
 This package uses Python and Docker, make sure you've got that installed. \
-Required environment variables template available in ***.env.example*** file.
+Required environment variables template available in `env.example` file.
 
 To spin up the containers:
 ```
