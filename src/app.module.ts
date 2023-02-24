@@ -3,6 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './user/user.module';
+import { DonationModule } from './donation/donation.module';
+
+/* TODO: Once the API will be properly documented move away from
+ *   *.interface.ts to *.dto.ts on adhoc basis with pipe validation.
+ * */
 
 @Module({
   imports: [
@@ -20,6 +26,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    UserModule,
+    DonationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
