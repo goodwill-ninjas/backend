@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15.2-alpine
+    networks:
+      - postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    env_file:
+      - docker.env
+  pgadmin:
+    image: dpage/pgadmin4:6.20
+    networks:
+      - postgres
+    ports:
+      - "8080:80"
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
+    env_file:
+      - docker.env
+  api:
+    build:
+      context: .
+      target: install-dependencies
+    networks:
+      - postgres
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/user/src/app/
+      - /user/src/app/node_modules
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    command: npm run start:dev
+
+networks:
+  postgres:
+    driver: bridge
