@@ -1,14 +1,21 @@
-# syntax=docker/dockerfile:1.4
+# Installing dependencies:
+FROM node:19-alpine AS install-dependencies
+WORKDIR /user/src/app
+COPY package*.json ./
+RUN npm ci
+COPY . .
 
-FROM --platform=$BUILDPLATFORM python:3.11-alpine
-ENV PIP_DISABLE_PIP_VERSION_CHECK 1
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-EXPOSE 8000
-WORKDIR /app 
-COPY requirements.txt /app
-RUN pip3 install -r requirements.txt --no-cache-dir
-COPY . /app 
-ENTRYPOINT ["python3"] 
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
+# Creating a build:
+FROM node:19-alpine AS create-build
+WORKDIR /user/src/app
+COPY --from=install-dependencies /user/src/app ./
+RUN npm run build
+USER node
 
+# Running the application:
+FROM node:19-alpine AS run
+WORKDIR /user/src/app
+COPY --from=install-dependencies /user/src/app/node_modules ./node_modules
+COPY --from=create-build /user/src/app/dist ./dist
+COPY package.json ./
+CMD ["npm", "run", "start:prod"]
