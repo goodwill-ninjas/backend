@@ -8,5 +8,5 @@ export interface IDonation {
   hemoglobin?: number;
   details?: string;
   donated_at: Date;
-  createdAt?: Date;
+  created_at?: Date;
 }

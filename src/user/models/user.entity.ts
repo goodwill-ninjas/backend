@@ -1,5 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { DonationEntity as Donation } from '../../donation/models/donation.entity';
+import { SocialMediaPostEntity as SocialMediaPost } from '../../social-media-post/models/social-media-post.entity';
+import { ImageEntity as Image } from '../../image/models/image.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -18,14 +27,18 @@ export class UserEntity {
   @Column()
   blood_type: string;
 
-  @Column()
-  avatar: number;
+  @OneToOne(() => Image)
+  @JoinColumn()
+  avatar_: Image;
 
   @Column()
   experience: number;
 
   @OneToMany(() => Donation, donation => donation.user_)
   donations: Donation[];
+
+  @OneToMany(() => SocialMediaPost, post => post.author_)
+  social_media_posts: SocialMediaPost[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

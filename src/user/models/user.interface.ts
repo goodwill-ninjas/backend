@@ -6,5 +6,5 @@ export interface IUser {
   blood_type: string;
   avatar: number;
   experience: number;
-  createdAt?: Date;
+  created_at?: Date;
 }
