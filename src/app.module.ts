@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
-import { UserSettingsModule } from './user-settings/user-settings.module';
 import { DonationModule } from './donation/donation.module';
 import { SocialMediaPostModule } from './social-media-post/social-media-post.module';
 import { ImageModule } from './image/image.module';
@@ -31,7 +30,6 @@ import { BloodCenterModule } from './blood-center/blood-center.module';
       synchronize: true,
     }),
     UserModule,
-    UserSettingsModule,
     DonationModule,
     SocialMediaPostModule,
     ImageModule,

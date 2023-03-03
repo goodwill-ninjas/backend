@@ -5,7 +5,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserEntity as User } from '../../user/models/user.entity';
+import { UserEntity as User } from '../../models/user.entity';
 
 @Entity('user_settings')
 export class UserSettingsEntity {
