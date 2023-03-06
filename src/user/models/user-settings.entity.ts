@@ -5,22 +5,22 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserEntity as User } from '../../models/user.entity';
+import { UserEntity } from './user.entity';
 
 @Entity('user_settings')
 export class UserSettingsEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => User)
+  @OneToOne(() => UserEntity)
   @JoinColumn()
-  user_: User;
+  user_: UserEntity;
 
   @Column({ default: 'default' })
   theme: string;
 
   @Column({ default: 'standard' })
-  font_size: number;
+  font_size: string;
 
   @Column({ default: true })
   event_notifications: boolean;

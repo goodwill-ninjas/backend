@@ -8,6 +8,7 @@ import { DonationModule } from './donation/donation.module';
 import { SocialMediaPostModule } from './social-media-post/social-media-post.module';
 import { ImageModule } from './image/image.module';
 import { BloodCenterModule } from './blood-center/blood-center.module';
+import { FeatModule } from './feat/feat.module';
 
 /* TODO: Once the API will be properly documented move away from
  *   *.interface.ts to *.dto.ts on adhoc basis with pipe validation.
@@ -34,6 +35,7 @@ import { BloodCenterModule } from './blood-center/blood-center.module';
     SocialMediaPostModule,
     ImageModule,
     BloodCenterModule,
+    FeatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

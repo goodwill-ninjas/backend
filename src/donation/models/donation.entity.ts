@@ -1,13 +1,13 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UserEntity as User } from '../../user/models/user.entity';
+import { UserEntity } from '../../user/models/user.entity';
 
 @Entity('donations')
 export class DonationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, user => user.donations)
-  user_: User;
+  @ManyToOne(() => UserEntity, user => user.donations)
+  user_: UserEntity;
 
   @Column({ nullable: true })
   companion_user_id: number;

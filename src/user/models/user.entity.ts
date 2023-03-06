@@ -6,9 +6,10 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { DonationEntity as Donation } from '../../donation/models/donation.entity';
-import { SocialMediaPostEntity as SocialMediaPost } from '../../social-media-post/models/social-media-post.entity';
-import { ImageEntity as Image } from '../../image/models/image.entity';
+import { DonationEntity } from '../../donation/models/donation.entity';
+import { SocialMediaPostEntity } from '../../social-media-post/models/social-media-post.entity';
+import { ImageEntity } from '../../image/models/image.entity';
+import { FeatCompletionEntity } from '../../feat/models/feat-completion.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -27,18 +28,24 @@ export class UserEntity {
   @Column()
   blood_type: string;
 
-  @OneToOne(() => Image)
+  @OneToOne(() => ImageEntity)
   @JoinColumn()
-  avatar_: Image;
+  avatar_: ImageEntity;
 
   @Column()
   experience: number;
 
-  @OneToMany(() => Donation, donation => donation.user_)
-  donations: Donation[];
+  @OneToMany(() => DonationEntity, donation => donation.user_)
+  donations: DonationEntity[];
 
-  @OneToMany(() => SocialMediaPost, post => post.author_)
-  social_media_posts: SocialMediaPost[];
+  @OneToMany(() => SocialMediaPostEntity, post => post.author_)
+  social_media_posts: SocialMediaPostEntity[];
+
+  @OneToMany(() => FeatCompletionEntity, completion => completion.user_)
+  achieved_feats: FeatCompletionEntity[];
+
+  @OneToMany(() => UserEntity, user => user.id)
+  invited_users: UserEntity[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

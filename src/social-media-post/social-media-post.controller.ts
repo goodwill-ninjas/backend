@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { SocialMediaPostService } from './social-media-post.service';
 
-@Controller('socialPosts')
+@Controller('social-posts')
 export class SocialMediaPostController {
   constructor(
     private readonly socialMediaPostService: SocialMediaPostService,
