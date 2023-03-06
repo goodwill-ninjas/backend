@@ -10,10 +10,6 @@ import { ImageModule } from './image/image.module';
 import { BloodCenterModule } from './blood-center/blood-center.module';
 import { FeatModule } from './feat/feat.module';
 
-/* TODO: Once the API will be properly documented move away from
- *   *.interface.ts to *.dto.ts on adhoc basis with pipe validation.
- * */
-
 @Module({
   imports: [
     ConfigModule.forRoot({
