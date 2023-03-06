@@ -16,7 +16,7 @@ export class BloodCenterEventEntity {
   street_name: string;
 
   @Column()
-  street_number: number;
+  street_number: string;
 
   @Column()
   postal_code: string;

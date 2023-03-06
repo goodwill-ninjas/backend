@@ -14,7 +14,7 @@ export class BloodCenterEntity {
   street_name: string;
 
   @Column()
-  street_number: number;
+  street_number: string;
 
   @Column()
   postal_code: string;
@@ -28,6 +28,10 @@ export class BloodCenterEntity {
    *  required or something else that's pre-supported?
    *  pipe might handle this anyway l8r
    */
+
+  @Column()
+  phone_number: string;
+
   @Column({ type: 'time' })
   open_from: string;
 
