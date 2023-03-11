@@ -7,7 +7,7 @@ export class RequestLogger implements NestMiddleware {
     Logger.log('', '----- Request START -----');
     Logger.log(`Method: ${req.method}`, 'Request');
     Logger.log(`Path: ${req.path}`, 'Request');
-    Logger.log(`Headers:\n${JSON.stringify(req.headers, null, 2)}`, 'Request'); // Uncomment for all headers instead of just cookies.
+    // Logger.log(`Headers:\n${JSON.stringify(req.headers, null, 2)}`, 'Request'); // Uncomment for all headers instead of just cookies.
     this.prettyCookiesLog(req.headers.cookie);
     Logger.log(`Body:\n${JSON.stringify(req.body, null, 2)}`, 'Request');
     Logger.log('', '----- Request END -----');
