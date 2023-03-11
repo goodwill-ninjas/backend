@@ -25,10 +25,4 @@ export class HealthController {
       (): Promise<HealthIndicatorResult> => this.db.pingCheck('Database Check'),
     ]);
   }
-
-  @Get()
-  @HealthCheck()
-  databaseCheck(): Promise<HealthCheckResult> {
-    return this.health.check([]);
-  }
 }
