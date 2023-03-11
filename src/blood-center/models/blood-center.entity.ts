@@ -42,7 +42,7 @@ export class BloodCenterEntity {
   blood_banks: BloodCenterEntity[];
 
   @OneToMany(() => BloodCenterDetails, details => details.blood_center_)
-  blood_details: BloodCenterDetails[];
+  blood_center_details: BloodCenterDetails[];
 
   @OneToMany(() => BloodCenterEvent, event => event.blood_center_)
   events: BloodCenterEvent[];
