@@ -6,7 +6,7 @@ export class BloodCenterDetailsEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => BloodCenterEntity, center => center.blood_details)
+  @ManyToOne(() => BloodCenterEntity, center => center.blood_center_details)
   blood_center_: BloodCenterEntity;
 
   @Column()

@@ -27,7 +27,7 @@ export class DonationEntity {
   @Column({ nullable: true })
   details: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'datetime' })
   donated_at: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
