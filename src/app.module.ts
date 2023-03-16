@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -9,6 +14,8 @@ import { SocialMediaPostModule } from './social-media-post/social-media-post.mod
 import { ImageModule } from './image/image.module';
 import { BloodCenterModule } from './blood-center/blood-center.module';
 import { FeatModule } from './feat/feat.module';
+import { HealthModule } from './health/health.module';
+import { RequestLogger } from './utilities/middleware/request-logger.middleware';
 
 @Module({
   imports: [
@@ -32,8 +39,15 @@ import { FeatModule } from './feat/feat.module';
     ImageModule,
     BloodCenterModule,
     FeatModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(RequestLogger)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
