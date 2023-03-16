@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { BloodCenterEntity } from './blood-center.entity';
 
-@Entity('blood_centers_detail')
+@Entity('blood_center_detail')
 export class BloodCenterDetailEntity {
   @PrimaryGeneratedColumn()
   id: number;
