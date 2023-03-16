@@ -8,6 +8,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './user/user.module';
+import { DonationModule } from './donation/donation.module';
+import { SocialMediaPostModule } from './social-media-post/social-media-post.module';
+import { ImageModule } from './image/image.module';
+import { BloodCenterModule } from './blood-center/blood-center.module';
+import { FeatModule } from './feat/feat.module';
 import { HealthModule } from './health/health.module';
 import { RequestLogger } from './utilities/middleware/request-logger.middleware';
 
@@ -27,6 +33,12 @@ import { RequestLogger } from './utilities/middleware/request-logger.middleware'
       autoLoadEntities: true,
       synchronize: true,
     }),
+    UserModule,
+    DonationModule,
+    SocialMediaPostModule,
+    ImageModule,
+    BloodCenterModule,
+    FeatModule,
     HealthModule,
   ],
   controllers: [AppController],
