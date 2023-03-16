@@ -9,6 +9,7 @@ async function bootstrap(): Promise<void> {
   const swaggerDocument = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('api', app, swaggerDocument, swaggerOptions);
+  app.setGlobalPrefix('api');
   await app.listen(3000);
 }
 
