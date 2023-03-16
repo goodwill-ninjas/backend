@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { BloodCenterDetailsEntity as BloodCenterDetails } from './blood-center-details.entity';
+import { BloodCenterDetailEntity as BloodCenterDetails } from './blood-center-detail.entity';
 import { BloodCenterEventEntity as BloodCenterEvent } from './blood-center-event.entity';
 
-@Entity('blood_centers')
+@Entity('blood_center')
 export class BloodCenterEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -24,14 +24,17 @@ export class BloodCenterEntity {
 
   @Column()
   voivodeship: string;
-  /* TODO: perhaps custom type for open_from/open_to if
-   *  required or something else that's pre-supported?
-   *  pipe might handle this anyway l8r
-   */
+
+  @Column()
+  geo_coordinates: string;
 
   @Column()
   phone_number: string;
 
+  /* TODO: perhaps custom type for open_from/open_to if
+   *  required or something else that's pre-supported?
+   *  pipe might handle this anyway l8r
+   */
   @Column({ type: 'time' })
   open_from: string;
 

@@ -11,7 +11,7 @@ import { SocialMediaPostEntity } from '../../social-media-post/models/social-med
 import { ImageEntity } from '../../image/models/image.entity';
 import { FeatCompletionEntity } from '../../feat/models/feat-completion.entity';
 
-@Entity('users')
+@Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,6 +27,9 @@ export class UserEntity {
 
   @Column()
   blood_type: string;
+
+  @Column()
+  gender: string;
 
   @OneToOne(() => ImageEntity)
   @JoinColumn()

@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from '../../user/models/user.entity';
 
-@Entity('social_posts')
+@Entity('social_post')
 export class SocialMediaPostEntity {
   @PrimaryGeneratedColumn()
   id: number;

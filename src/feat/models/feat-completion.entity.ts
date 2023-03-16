@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from '../../user/models/user.entity';
 import { FeatEntity } from './feat.entity';
 
-@Entity('feat_completions')
+@Entity('feat_completion')
 export class FeatCompletionEntity {
   @PrimaryGeneratedColumn()
   id: number;

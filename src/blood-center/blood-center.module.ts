@@ -3,14 +3,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BloodCenterService } from './blood-center.service';
 import { BloodCenterController } from './blood-center.controller';
 import { BloodCenterEntity } from './models/blood-center.entity';
-import { BloodCenterDetailsEntity } from './models/blood-center-details.entity';
+import { BloodCenterDetailEntity } from './models/blood-center-detail.entity';
 import { BloodCenterEventEntity } from './models/blood-center-event.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       BloodCenterEntity,
-      BloodCenterDetailsEntity,
+      BloodCenterDetailEntity,
       BloodCenterEventEntity,
     ]),
   ],

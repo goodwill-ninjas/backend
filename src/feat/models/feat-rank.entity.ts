@@ -9,7 +9,7 @@ import {
 import { FeatEntity } from './feat.entity';
 import { ImageEntity } from '../../image/models/image.entity';
 
-@Entity('feat_ranks')
+@Entity('feat_rank')
 export class FeatRankEntity {
   @PrimaryGeneratedColumn()
   id: number;
