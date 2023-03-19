@@ -5,11 +5,12 @@ import { swaggerConfig, swaggerOptions } from './utils/swagger.config';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api');
   const config = swaggerConfig();
   const swaggerDocument = SwaggerModule.createDocument(app, config);
+  
+  SwaggerModule.setup('swagger', app, swaggerDocument, swaggerOptions);
 
-  SwaggerModule.setup('api', app, swaggerDocument, swaggerOptions);
-  app.setGlobalPrefix('api');
   await app.listen(3000);
 }
 

@@ -21,7 +21,7 @@ export class HealthController {
   healthCheck(): Promise<HealthCheckResult> {
     return this.health.check([
       (): Promise<HealthIndicatorResult> =>
-        this.http.pingCheck('API Check', 'http://localhost:3000/api'),
+        this.http.pingCheck('API Check', 'http://localhost:3000/api/status'),
       (): Promise<HealthIndicatorResult> => this.db.pingCheck('Database Check'),
     ]);
   }
