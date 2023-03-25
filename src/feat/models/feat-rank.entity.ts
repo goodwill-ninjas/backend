@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -15,7 +16,8 @@ export class FeatRankEntity {
   id: number;
 
   @ManyToOne(() => FeatEntity, feat => feat.ranks)
-  feat_: FeatEntity;
+  @JoinColumn({ name: 'feat_id' })
+  feat: FeatEntity;
 
   @Column()
   rank: number;
@@ -27,13 +29,13 @@ export class FeatRankEntity {
   title_award: string;
 
   @OneToOne(() => ImageEntity, { nullable: true })
-  @JoinColumn()
-  avatar_award_: ImageEntity;
+  @JoinColumn({ name: 'avatar_award_id' })
+  avatar_award: ImageEntity;
 
   @OneToOne(() => ImageEntity, { nullable: true })
-  @JoinColumn()
-  medal_award_: ImageEntity;
+  @JoinColumn({ name: 'medal_award_id' })
+  medal_award: ImageEntity;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   created_at: Date;
 }

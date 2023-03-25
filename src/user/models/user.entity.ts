@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToMany,
@@ -10,46 +11,95 @@ import { DonationEntity } from '../../donation/models/donation.entity';
 import { SocialMediaPostEntity } from '../../social-media-post/models/social-media-post.entity';
 import { ImageEntity } from '../../image/models/image.entity';
 import { FeatCompletionEntity } from '../../feat/models/feat-completion.entity';
+import { Exclude } from 'class-transformer';
+import { UserSettingEntity } from './user-setting.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('user')
 export class UserEntity {
+  @ApiProperty({
+    description: 'Primary key as User ID',
+    example: 1,
+  })
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({
+    description: 'User email',
+    example: 'foo@bar.com',
+  })
   @Column({ unique: true })
   email: string;
 
+  @ApiProperty({
+    description: 'User login',
+    example: 'Mary_02',
+  })
   @Column({ unique: true })
   username: string;
 
+  @ApiProperty({
+    description: 'User password',
+    example: 'secret',
+  })
   @Column()
+  @Exclude()
   password: string;
 
+  @ApiProperty({
+    description: 'User blood type',
+    example: 'AB-',
+  })
   @Column()
   blood_type: string;
 
+  @ApiProperty({
+    description: 'User gender',
+    example: 'Female',
+  })
   @Column()
   gender: string;
 
-  @OneToOne(() => ImageEntity)
-  @JoinColumn()
-  avatar_: ImageEntity;
+  @ApiProperty({
+    description: 'User settings',
+    example: UserSettingEntity,
+  })
+  @OneToOne(() => UserSettingEntity, userSetting => userSetting.user, {
+    eager: true,
+  })
+  settings: UserSettingEntity;
 
+  @ApiProperty({
+    description: 'User avatar id',
+    example: 1,
+  })
+  @OneToOne(() => ImageEntity)
+  @JoinColumn({ name: 'avatar_id' })
+  avatar: ImageEntity;
+
+  @ApiProperty({
+    description: 'User total experience',
+    example: 1337,
+  })
   @Column()
   experience: number;
 
-  @OneToMany(() => DonationEntity, donation => donation.user_)
+  @OneToMany(() => DonationEntity, donation => donation.user)
   donations: DonationEntity[];
 
-  @OneToMany(() => SocialMediaPostEntity, post => post.author_)
+  @OneToMany(() => SocialMediaPostEntity, post => post.author)
   social_media_posts: SocialMediaPostEntity[];
 
-  @OneToMany(() => FeatCompletionEntity, completion => completion.user_)
+  @OneToMany(() => FeatCompletionEntity, completion => completion.user)
   achieved_feats: FeatCompletionEntity[];
 
   @OneToMany(() => UserEntity, user => user.id)
   invited_users: UserEntity[];
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @ApiProperty({
+    description: 'Time of user creation',
+    example: '2002-02-02T22:22:22.22Z',
+  })
+  @CreateDateColumn()
   created_at: Date;
 }

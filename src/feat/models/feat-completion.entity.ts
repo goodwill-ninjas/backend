@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserEntity } from '../../user/models/user.entity';
 import { FeatEntity } from './feat.entity';
 
@@ -8,14 +15,16 @@ export class FeatCompletionEntity {
   id: number;
 
   @ManyToOne(() => UserEntity, user => user.achieved_feats)
-  user_: UserEntity;
+  @JoinColumn({ name: 'user_id' })
+  user: UserEntity;
 
   @ManyToOne(() => FeatEntity, feat => feat.completions)
-  feat_: FeatEntity;
+  @JoinColumn({ name: 'feat_id' })
+  feat: FeatEntity;
 
   @Column()
   feat_rank: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   created_at: Date;
 }

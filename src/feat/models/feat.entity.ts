@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { FeatRankEntity } from './feat-rank.entity';
 import { FeatCompletionEntity } from './feat-completion.entity';
 
@@ -13,12 +19,12 @@ export class FeatEntity {
   @Column()
   description: string;
 
-  @OneToMany(() => FeatRankEntity, rank => rank.feat_)
+  @OneToMany(() => FeatRankEntity, rank => rank.feat)
   ranks: FeatRankEntity[];
 
-  @OneToMany(() => FeatCompletionEntity, completion => completion.feat_)
+  @OneToMany(() => FeatCompletionEntity, completion => completion.feat)
   completions: FeatCompletionEntity[];
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   created_at: Date;
 }

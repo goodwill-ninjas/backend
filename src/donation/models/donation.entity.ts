@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserEntity } from '../../user/models/user.entity';
 
 @Entity('donation')
@@ -7,7 +15,8 @@ export class DonationEntity {
   id: number;
 
   @ManyToOne(() => UserEntity, user => user.donations)
-  user_: UserEntity;
+  @JoinColumn({ name: 'user_id' })
+  user: UserEntity;
 
   @Column({ nullable: true })
   companion_user_id: number;
@@ -30,6 +39,9 @@ export class DonationEntity {
   @Column({ type: 'timestamp' })
   donated_at: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   created_at: Date;
+
+  @DeleteDateColumn()
+  deleted_at: Date;
 }

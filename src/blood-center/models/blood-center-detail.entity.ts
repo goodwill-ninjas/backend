@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { BloodCenterEntity } from './blood-center.entity';
 
 @Entity('blood_center_detail')
@@ -7,7 +14,8 @@ export class BloodCenterDetailEntity {
   id: number;
 
   @ManyToOne(() => BloodCenterEntity, center => center.blood_center_details)
-  blood_center_: BloodCenterEntity;
+  @JoinColumn({ name: 'blood_center_id' })
+  blood_center: BloodCenterEntity;
 
   @Column()
   blood_type: string;
@@ -15,6 +23,6 @@ export class BloodCenterDetailEntity {
   @Column()
   capacity: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   created_at: Date;
 }
