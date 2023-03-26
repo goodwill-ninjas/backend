@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { BloodCenterDetailEntity as BloodCenterDetails } from './blood-center-detail.entity';
 import { BloodCenterEventEntity as BloodCenterEvent } from './blood-center-event.entity';
 
@@ -44,12 +50,12 @@ export class BloodCenterEntity {
   @OneToMany(() => BloodCenterEntity, center => center.id)
   blood_banks: BloodCenterEntity[];
 
-  @OneToMany(() => BloodCenterDetails, details => details.blood_center_)
+  @OneToMany(() => BloodCenterDetails, details => details.blood_center)
   blood_center_details: BloodCenterDetails[];
 
-  @OneToMany(() => BloodCenterEvent, event => event.blood_center_)
+  @OneToMany(() => BloodCenterEvent, event => event.blood_center)
   events: BloodCenterEvent[];
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   created_at: Date;
 }

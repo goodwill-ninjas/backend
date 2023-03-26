@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserEntity } from '../../user/models/user.entity';
 
 @Entity('social_post')
@@ -7,7 +15,8 @@ export class SocialMediaPostEntity {
   id: number;
 
   @ManyToOne(() => UserEntity, user => user.social_media_posts)
-  author_: number;
+  @JoinColumn({ name: 'author_id' })
+  author: number;
 
   @Column()
   media_type: string;
@@ -15,9 +24,9 @@ export class SocialMediaPostEntity {
   @Column()
   content: string;
 
-  @Column({ type: 'timestamp' })
-  deleted_at: Date;
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   created_at: Date;
+
+  @DeleteDateColumn()
+  deleted_at: Date;
 }

@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { BloodCenterEntity } from './blood-center.entity';
 
 @Entity('blood_center_event')
@@ -31,8 +38,9 @@ export class BloodCenterEventEntity {
   geo_coordinates: string;
 
   @ManyToOne(() => BloodCenterEntity, center => center.events)
-  blood_center_: BloodCenterEntity;
+  @JoinColumn({ name: 'blood_center_id' })
+  blood_center: BloodCenterEntity;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   created_at: Date;
 }

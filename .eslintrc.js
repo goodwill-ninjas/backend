@@ -23,5 +23,11 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'error',
     'object-curly-spacing': 'off',
     'array-bracket-spacing': 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'crlf',
+      },
+    ],
   },
 };
