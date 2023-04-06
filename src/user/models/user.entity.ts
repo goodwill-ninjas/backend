@@ -84,7 +84,9 @@ export class UserEntity {
   @Column()
   experience: number;
 
-  @OneToMany(() => DonationEntity, donation => donation.user)
+  @OneToMany(() => DonationEntity, donation => donation.user, {
+    cascade: true,
+  })
   donations: DonationEntity[];
 
   @OneToMany(() => SocialMediaPostEntity, post => post.author)
