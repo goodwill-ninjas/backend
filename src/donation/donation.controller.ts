@@ -29,20 +29,6 @@ import { CreateDonationDto } from './dto/create-donation.dto';
 export class DonationController {
   constructor(private readonly donationService: DonationService) {}
 
-  @Get()
-  @ApiOperation({
-    summary: 'Get Donations',
-    description: 'Returns a list of all donations.',
-  })
-  @ApiOkResponse({
-    type: DonationEntity,
-    isArray: true,
-    description: 'List of all added donations.',
-  })
-  getDonations(): Promise<DonationEntity[]> {
-    return this.donationService.findDonations();
-  }
-
   @Get(':id')
   @ApiOperation({
     summary: 'Get Donation',

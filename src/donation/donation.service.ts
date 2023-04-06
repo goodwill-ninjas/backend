@@ -14,10 +14,6 @@ export class DonationService {
     private readonly userService: UserService,
   ) {}
 
-  async findDonations(): Promise<DonationEntity[]> {
-    return await this.donationRepository.find();
-  }
-
   async findDonationById(id: number): Promise<DonationEntity> {
     const donation = await this.donationRepository.findOneBy({
       id,
