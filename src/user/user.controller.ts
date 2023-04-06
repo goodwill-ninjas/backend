@@ -22,6 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './models/user.entity';
+import { DonationEntity } from '../donation/models/donation.entity';
 
 @ApiTags('User Management')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -35,10 +36,12 @@ export class UserController {
     description: 'Returns a list of all users.',
   })
   @ApiOkResponse({
+    type: UserEntity,
+    isArray: true,
     description: 'List of registered users',
   })
-  getUsers(): Promise<UserEntity[]> {
-    return this.userService.findUsers();
+  async getUsers(): Promise<UserEntity[]> {
+    return await this.userService.findUsers();
   }
 
   @Get(':id')
@@ -47,6 +50,7 @@ export class UserController {
     description: 'Tries to find a single user matching the given id.',
   })
   @ApiOkResponse({
+    type: UserEntity,
     description: 'Finds user with matching id',
   })
   @ApiNotFoundResponse({
@@ -56,20 +60,39 @@ export class UserController {
     return await this.userService.findUserById(id);
   }
 
+  @Get(':id/donations')
+  @ApiOperation({
+    summary: 'Get User Donations',
+    description: 'List all donations for given user.',
+  })
+  @ApiOkResponse({
+    type: DonationEntity,
+    isArray: true,
+    description: 'List of donations registered by given user',
+  })
+  @ApiNotFoundResponse({
+    description: 'User with given id does not exist',
+  })
+  async getUserDonations(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<DonationEntity[]> {
+    return await this.userService.findUserDonations(id);
+  }
+
   @Post()
   @ApiOperation({
     summary: 'Register User',
     description: 'Tries to save a new user.',
   })
   @ApiCreatedResponse({
-    description: 'Created user object with related user settings as response',
     type: UserEntity,
+    description: 'Created user object with related user settings as response',
   })
   @ApiBadRequestResponse({
     description: 'User creation failed. Please check request body',
   })
-  registerUser(@Body() body: CreateUserDto): Promise<UserEntity> {
-    return this.userService.createUser(body);
+  async registerUser(@Body() body: CreateUserDto): Promise<UserEntity> {
+    return await this.userService.createUser(body);
   }
 
   @Delete(':id')
@@ -79,12 +102,12 @@ export class UserController {
     description: 'Tries to delete an user if user with given id exists.',
   })
   @ApiNoContentResponse({
-    description: 'Deletes user with matching id',
+    description: 'User successfully deleted',
   })
   @ApiNotFoundResponse({
     description: 'User with given id does not exist',
   })
   async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    await this.userService.remove(id);
+    await this.userService.removeUser(id);
   }
 }

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserSettingEntity } from './models/user-setting.entity';
 import { ErrorCodes } from '../utilities/error-codes';
+import { DonationEntity } from '../donation/models/donation.entity';
 
 @Injectable()
 export class UserService {
@@ -13,10 +14,12 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(UserSettingEntity)
     private readonly userSettingRepository: Repository<UserSettingEntity>,
+    @InjectRepository(DonationEntity)
+    private readonly donationRepository: Repository<DonationEntity>,
   ) {}
 
-  findUsers(): Promise<UserEntity[]> {
-    return this.userRepository.find();
+  async findUsers(): Promise<UserEntity[]> {
+    return await this.userRepository.find();
   }
 
   async findUserById(id: number): Promise<UserEntity> {
@@ -28,6 +31,16 @@ export class UserService {
 
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     return user;
+  }
+
+  async findUserDonations(id: number): Promise<DonationEntity[]> {
+    await this.findUserById(id);
+
+    return await this.donationRepository.find({
+      where: {
+        user_id: id,
+      },
+    });
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
@@ -60,10 +73,16 @@ export class UserService {
     }
   }
 
-  async remove(id: number): Promise<void> {
+  async removeUser(id: number): Promise<void> {
+    await this.donationRepository
+      .createQueryBuilder('donation')
+      .softDelete()
+      .where('user_id = :id', { id })
+      .execute();
+
     const result = await this.userRepository.delete(id);
 
-    if (result.affected === 0)
+    if (!result.affected)
       throw new HttpException(
         `User with id ${id} not found`,
         HttpStatus.NOT_FOUND,
