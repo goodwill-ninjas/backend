@@ -43,13 +43,13 @@ export class UserService {
     });
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
+  async createUser(dto: CreateUserDto): Promise<UserEntity> {
     try {
       const defaultSettings = await this.userSettingRepository.create();
       await this.userSettingRepository.save(defaultSettings);
 
       const newUser = await this.userRepository.create({
-        ...createUserDto,
+        ...dto,
         experience: 0,
         settings: defaultSettings,
       });

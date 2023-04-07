@@ -8,7 +8,7 @@ export const swaggerConfig = (): Omit<OpenAPIObject, 'paths'> => {
   return new DocumentBuilder()
     .setTitle('Blood Donor API')
     .setDescription('Documentation for the Blood Donor Backend API')
-    .setVersion('0.1.0')
+    .setVersion('0.4.0')
     .build();
 };
 

@@ -9,8 +9,4 @@ export class SocialMediaPostService {
     @InjectRepository(SocialMediaPostEntity)
     private readonly socialMediaPostRepository: Repository<SocialMediaPostEntity>,
   ) {}
-
-  hello(): string {
-    return 'Hello from Social Media Post Module';
-  }
 }

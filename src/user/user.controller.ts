@@ -24,7 +24,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './models/user.entity';
 import { DonationEntity } from '../donation/models/donation.entity';
 
-@ApiTags('User Management')
+@ApiTags('User')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UserController {

@@ -23,7 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateDonationDto } from './dto/create-donation.dto';
 
-@ApiTags('Donations Management')
+@ApiTags('Donations')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('donations')
 export class DonationController {
