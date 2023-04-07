@@ -4,7 +4,7 @@ import { UserEntity } from './models/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserSettingEntity } from './models/user-setting.entity';
-import { ErrorCodes } from '../utilities/error-codes';
+import { ErrorCodes } from '../common/utilities/error-codes';
 import { DonationEntity } from '../donation/models/donation.entity';
 
 @Injectable()

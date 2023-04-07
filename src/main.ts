@@ -1,7 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule } from '@nestjs/swagger';
-import { swaggerConfig, swaggerOptions } from './utilities/swagger.config';
+import {
+  swaggerConfig,
+  swaggerOptions,
+} from './common/utilities/swagger.config';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap(): Promise<void> {

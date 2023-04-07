@@ -40,7 +40,7 @@ export class UserController {
     isArray: true,
     description: 'List of registered users',
   })
-  async getUsers(): Promise<UserEntity[]> {
+  async getAllUsers(): Promise<UserEntity[]> {
     return await this.userService.findUsers();
   }
 

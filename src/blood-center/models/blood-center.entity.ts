@@ -37,15 +37,11 @@ export class BloodCenterEntity {
   @Column()
   phone_number: string;
 
-  /* TODO: perhaps custom type for open_from/open_to if
-   *  required or something else that's pre-supported?
-   *  pipe might handle this anyway l8r
-   */
-  @Column({ type: 'time' })
-  open_from: string;
+  @Column({ type: 'timestamp with time zone' })
+  open_from: Date;
 
-  @Column({ type: 'time' })
-  open_to: string;
+  @Column({ type: 'timestamp with time zone' })
+  open_to: Date;
 
   @OneToMany(() => BloodCenterEntity, center => center.id)
   blood_banks: BloodCenterEntity[];

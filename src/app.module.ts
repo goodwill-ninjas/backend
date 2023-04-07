@@ -15,7 +15,7 @@ import { ImageModule } from './image/image.module';
 import { BloodCenterModule } from './blood-center/blood-center.module';
 import { FeatModule } from './feat/feat.module';
 import { HealthModule } from './health/health.module';
-import { RequestLogger } from './utilities/middleware/request-logger.middleware';
+import { RequestLogger } from './common/middleware/request-logger.middleware';
 
 @Module({
   imports: [
