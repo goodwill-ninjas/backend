@@ -4,7 +4,7 @@ import { UserEntity } from './models/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserSettingEntity } from './models/user-setting.entity';
-import { ErrorCodes } from '../utilities/error-codes';
+import { ErrorCodes } from '../common/utilities/error-codes';
 import { DonationEntity } from '../donation/models/donation.entity';
 
 @Injectable()
@@ -43,13 +43,13 @@ export class UserService {
     });
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
+  async createUser(dto: CreateUserDto): Promise<UserEntity> {
     try {
       const defaultSettings = await this.userSettingRepository.create();
       await this.userSettingRepository.save(defaultSettings);
 
       const newUser = await this.userRepository.create({
-        ...createUserDto,
+        ...dto,
         experience: 0,
         settings: defaultSettings,
       });

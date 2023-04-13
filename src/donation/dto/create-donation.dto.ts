@@ -7,7 +7,7 @@ import {
   IsOptional,
   Matches,
 } from 'class-validator';
-import { DonationType } from '../models/donation-type.model';
+import { DonationType } from '../../common/enum/donation-type.enum';
 
 export class CreateDonationDto {
   @ApiProperty({

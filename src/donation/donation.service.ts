@@ -25,10 +25,8 @@ export class DonationService {
     return donation;
   }
 
-  async createDonation(
-    createDonationDto: CreateDonationDto,
-  ): Promise<DonationEntity> {
-    const { user_id, ...donationDetails } = createDonationDto;
+  async createDonation(dto: CreateDonationDto): Promise<DonationEntity> {
+    const { user_id, ...donationDetails } = dto;
     const user = await this.userService.findUserById(user_id);
 
     try {

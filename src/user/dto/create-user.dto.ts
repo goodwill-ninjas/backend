@@ -5,8 +5,8 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
-import { BloodType } from '../models/blood-type.model';
-import { GenderIdentity } from '../models/gender-identity.model';
+import { BloodType } from '../../common/enum/blood-type.enum';
+import { GenderIdentity } from '../../common/enum/gender-identity.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {

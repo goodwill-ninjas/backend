@@ -1,0 +1,7 @@
+export enum BloodStatus {
+  STOP = 'STOP',
+  ALMOST_FULL = 'ALMOST_FULL',
+  OPTIMAL = 'OPTIMAL',
+  MODERATE = 'MODERATE',
+  CRITICAL = 'CRITICAL',
+}
