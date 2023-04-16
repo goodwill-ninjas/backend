@@ -28,8 +28,8 @@ jobs:
       
       - name: Prepare envs
         run: |
-          echo DATESTAMP="$(date +"%Y%m%d")"
-          echo GIT_HASH_SHORT="$(git rev-parse --short $GITHUB_SHA)"
+          echo DATESTAMP="$(date +'%Y%m%d')" >> $GITHUB_ENV
+          echo GIT_HASH_SHORT="$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
           
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -44,5 +44,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
