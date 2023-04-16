@@ -1,0 +1,45 @@
+name: Build a Docker Image & Publish to GitHub Packages
+
+on:
+  push:
+    branches: [ "DEV-138-git-hub-actions-backend-budowanie-obrazu-dockera-i-wypchniecie-do-ghcr" ]
+  pull_request:
+    branches: [ "DEV-138-git-hub-actions-backend-budowanie-obrazu-dockera-i-wypchniecie-do-ghcr" ]
+
+env:
+  DATE: '$(date +"%Y%m%d")'
+  GIT_HASH_SHORT: $(git rev-parse --short "$GITHUB_SHA")
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ env.GITHUB_REPOSITORY }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+    
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2.1.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4.3.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=github-action-cicd
+
+      - name: Build the Docker image
+        uses: docker/build-push-action@v4.0.0
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+
+          labels: ${{ steps.meta.outputs.labels }}
+#         run: docker build . --file Dockerfile --tag ${{ env.IMAGE_NAME }}:${{ env.DATE }}-${{ env.GIT_HASH_SHORT }}
