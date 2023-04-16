@@ -29,7 +29,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4.3.0
         with:
-          images: ${{ env.REGISTRY }}/${{ env.GITHUB_REPOSITORY }}
+          images: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.GIT_HASH_SHORT }}
           labels: |
             triggered-by=github-action-cicd
 
@@ -39,6 +39,4 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-
           labels: ${{ steps.meta.outputs.labels }}
-#         run: docker build . --file Dockerfile --tag ${{ env.IMAGE_NAME }}:${{ env.DATE }}-${{ env.GIT_HASH_SHORT }}
