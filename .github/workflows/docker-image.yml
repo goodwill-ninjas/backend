@@ -10,7 +10,7 @@ env:
   DATE: '$(date +"%Y%m%d")'
   GIT_HASH_SHORT: $(git rev-parse --short "$GITHUB_SHA")
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ env.GITHUB_REPOSITORY }}
+  IMAGE_NAME: $GITHUB_REPOSITORY
 
 jobs:
   build:
