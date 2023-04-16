@@ -7,13 +7,14 @@ on:
     branches: [ "DEV-138-git-hub-actions-backend-budowanie-obrazu-dockera-i-wypchniecie-do-ghcr" ]
 
 env:
-  DATE: '$(date +"%Y%m%d")'
-  GIT_HASH_SHORT: $(git rev-parse --short "$GITHUB_SHA")
   REGISTRY: ghcr.io
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -24,12 +25,17 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Prepare envs
+        run: |
+          echo DATESTAMP="$(date +"%Y%m%d")"
+          echo GIT_HASH_SHORT="$(git rev-parse --short $GITHUB_SHA)"
           
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4.3.0
         with:
-          images: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.GIT_HASH_SHORT }}
+          images: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.DATESTAMP }}-${{ env.GIT_HASH_SHORT }}
           labels: |
             triggered-by=github-action-cicd
 
