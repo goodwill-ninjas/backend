@@ -73,9 +73,12 @@ export class UserEntity {
     description: 'User avatar id',
     example: 1,
   })
-  @OneToOne(() => ImageEntity)
+  @OneToOne(() => ImageEntity, { eager: true })
   @JoinColumn({ name: 'avatar_id' })
   avatar: ImageEntity;
+
+  @Column()
+  avatar_id: number;
 
   @ApiProperty({
     description: 'User total experience',
