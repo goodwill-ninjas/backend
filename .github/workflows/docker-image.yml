@@ -1,10 +1,8 @@
 name: Build a Docker Image & Publish to GitHub Packages
 
 on:
-  push:
-    branches: [ "DEV-138-git-hub-actions-backend-budowanie-obrazu-dockera-i-wypchniecie-do-ghcr" ]
-  pull_request:
-    branches: [ "DEV-138-git-hub-actions-backend-budowanie-obrazu-dockera-i-wypchniecie-do-ghcr" ]
+  - push
+  - pull_request
 
 env:
   REGISTRY: ghcr.io
@@ -26,7 +24,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Prepare envs
+      - name: Prepare env vars
         run: |
           echo DATESTAMP="$(date +'%Y%m%d')" >> $GITHUB_ENV
           echo GIT_HASH_SHORT="$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
