@@ -33,6 +33,16 @@ export class UserService {
     return user;
   }
 
+  async findUserByEmail(email: string): Promise<UserEntity> {
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.email = :email', { email })
+      .getOne();
+
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return user;
+  }
+
   async findUserDonations(id: number): Promise<DonationEntity[]> {
     await this.findUserById(id);
 
