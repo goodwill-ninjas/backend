@@ -28,7 +28,7 @@ describe('DonationController', () => {
         ...dto,
       };
     }),
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     removeDonation: jest.fn(),
   };
 
