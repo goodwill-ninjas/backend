@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -38,17 +39,12 @@ export class UserEntity {
   @Column({ unique: true })
   username: string;
 
-  @ApiProperty({
-    description: 'User password',
-    example: 'secret',
-  })
-  @Column()
   @Exclude()
   password: string;
 
   @ApiProperty({
     description: 'User blood type',
-    example: 'AB-',
+    example: 'AB Rh-',
   })
   @Column()
   blood_type: string;
@@ -73,7 +69,7 @@ export class UserEntity {
     description: 'User avatar id',
     example: 1,
   })
-  @OneToOne(() => ImageEntity, { eager: true })
+  @ManyToOne(() => ImageEntity, { eager: true })
   @JoinColumn({ name: 'avatar_id' })
   avatar: ImageEntity;
 
