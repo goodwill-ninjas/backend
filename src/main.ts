@@ -9,12 +9,12 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
+  app.setGlobalPrefix('api');
+
   const config = swaggerConfig();
   const swaggerDocument = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, swaggerDocument, swaggerOptions);
-
-  app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix('api');
 
   await app.listen(3000);
 }

@@ -1,5 +1,4 @@
 import {
-  Body,
   ClassSerializerInterceptor,
   Controller,
   Delete,
@@ -7,20 +6,16 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
-  Post,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
-  ApiBadRequestResponse,
-  ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './models/user.entity';
 import { DonationEntity } from '../donation/models/donation.entity';
 
@@ -77,22 +72,6 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<DonationEntity[]> {
     return await this.userService.findUserDonations(id);
-  }
-
-  @Post()
-  @ApiOperation({
-    summary: 'Register User',
-    description: 'Tries to save a new user.',
-  })
-  @ApiCreatedResponse({
-    type: UserEntity,
-    description: 'Created user object with related user settings as response',
-  })
-  @ApiBadRequestResponse({
-    description: 'User creation failed. Please check request body',
-  })
-  async registerUser(@Body() body: CreateUserDto): Promise<UserEntity> {
-    return await this.userService.createUser(body);
   }
 
   @Delete(':id')
