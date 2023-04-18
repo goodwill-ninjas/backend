@@ -35,7 +35,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.DATESTAMP }}-${{ env.GIT_HASH_SHORT }}
+          images: ${{ env.REGISTRY }}/${{ github.repository }}
+          tags: ${{ env.DATESTAMP }}-${{ env.GIT_HASH_SHORT }}
+          flavor: latest=true
           labels: |
             triggered-by=github-action-cicd
 
