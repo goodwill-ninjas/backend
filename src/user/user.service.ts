@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserSettingEntity } from './models/user-setting.entity';
 import { ErrorCodes } from '../common/utilities/error-codes';
 import { DonationEntity } from '../donation/models/donation.entity';
+import { ImageEntity } from '../image/models/image.entity';
 
 @Injectable()
 export class UserService {
@@ -16,6 +17,8 @@ export class UserService {
     private readonly userSettingRepository: Repository<UserSettingEntity>,
     @InjectRepository(DonationEntity)
     private readonly donationRepository: Repository<DonationEntity>,
+    @InjectRepository(ImageEntity)
+    private readonly imageRepository: Repository<ImageEntity>,
   ) {}
 
   async findUsers(): Promise<UserEntity[]> {
@@ -55,11 +58,16 @@ export class UserService {
 
   async createUser(dto: CreateUserDto): Promise<UserEntity> {
     try {
+      const { avatar_id, ...userDetails } = dto;
       const defaultSettings = await this.userSettingRepository.create();
+      const avatar = await this.imageRepository.findOneBy({
+        id: avatar_id,
+      });
       await this.userSettingRepository.save(defaultSettings);
 
       const newUser = await this.userRepository.create({
-        ...dto,
+        ...userDetails,
+        avatar,
         experience: 0,
         settings: defaultSettings,
       });
