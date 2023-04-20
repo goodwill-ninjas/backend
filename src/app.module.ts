@@ -18,6 +18,8 @@ import { HealthModule } from './health/health.module';
 import { RequestLogger } from './common/middleware/request-logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { configValidationSchema } from './common/utilities/config-validation.schema';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -49,10 +51,10 @@ import { configValidationSchema } from './common/utilities/config-validation.sch
   controllers: [AppController],
   providers: [
     AppService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule implements NestModule {

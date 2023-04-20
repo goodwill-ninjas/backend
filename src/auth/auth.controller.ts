@@ -18,7 +18,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Public } from './guard/public-route.guard';
+import { Public } from './guard/public-route.decorator';
 
 @ApiTags('Auth')
 @UseInterceptors(ClassSerializerInterceptor)
