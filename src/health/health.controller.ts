@@ -7,7 +7,12 @@ import {
   HttpHealthIndicator,
   TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('Base')
 @Controller('health')
@@ -19,6 +24,7 @@ export class HealthController {
   ) {}
 
   @Get()
+  @ApiBearerAuth()
   @HealthCheck()
   @ApiOperation({
     summary: 'Health Check',

@@ -13,12 +13,14 @@ import { BloodCenterEntity } from './models/blood-center.entity';
 import { SaveBloodCenterDetailsDto } from './dto/save-blood-center-details.dto';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { Public } from '../auth/guard/public-route.decorator';
 
 @ApiTags('Blood Centers')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -27,6 +29,7 @@ export class BloodCenterController {
   constructor(private readonly bloodCenterService: BloodCenterService) {}
 
   @Get()
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get Blood Centers',
     description: 'Returns a list of all Blood Centers.',
@@ -41,6 +44,7 @@ export class BloodCenterController {
   }
 
   @Get(':city')
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get Blood Center',
     description:
@@ -60,6 +64,7 @@ export class BloodCenterController {
   }
 
   @Post('status')
+  @Public()
   @ApiOperation({
     summary: 'Update Blood Bank Capacity',
     description:

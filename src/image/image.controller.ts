@@ -1,6 +1,7 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ImageService } from './image.service';
 import {
+  ApiBearerAuth,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -14,6 +15,7 @@ export class ImageController {
   constructor(private readonly imageService: ImageService) {}
 
   @Get(':id')
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get Image',
     description: 'Tries to find a single image matching the given id.',

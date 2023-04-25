@@ -14,6 +14,7 @@ import { DonationService } from './donation.service';
 import { DonationEntity } from './models/donation.entity';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -30,6 +31,7 @@ export class DonationController {
   constructor(private readonly donationService: DonationService) {}
 
   @Get(':id')
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get Donation',
     description: 'Tries to find a single donation matching the given id.',
@@ -46,6 +48,7 @@ export class DonationController {
   }
 
   @Post()
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Add Donation',
     description: 'Tries to add a new donation.',
@@ -65,6 +68,7 @@ export class DonationController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @HttpCode(204)
   @ApiOperation({
     summary: 'Delete Donation',
