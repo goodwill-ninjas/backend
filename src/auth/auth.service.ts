@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { UserEntity } from '../user/models/user.entity';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { JwtPayload } from './interfaces/jwt-payload';
 
 @Injectable()
 export class AuthService {
@@ -37,16 +38,18 @@ export class AuthService {
     if (!user)
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
 
-    return {
-      token: await this.jwtService.signAsync({
-        iss: 'blooddonor',
-        context: {
-          user: {
-            userId: user.id,
-            displayName: user.username,
-          },
+    const payload: JwtPayload = {
+      iss: 'blooddonor',
+      context: {
+        user: {
+          userId: user.id,
+          displayName: user.username,
         },
-      }),
+      },
+    };
+
+    return {
+      token: await this.jwtService.signAsync(payload),
     };
   }
 

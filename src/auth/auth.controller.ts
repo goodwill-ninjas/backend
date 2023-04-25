@@ -18,6 +18,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Public } from './guard/public-route.decorator';
 
 @ApiTags('Auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -35,6 +36,7 @@ export class AuthController {
   @ApiUnauthorizedResponse({
     description: 'Invalid credentials',
   })
+  @Public()
   @Post('login')
   @HttpCode(200)
   login(@Body() body: LoginUserDto): Promise<{ token: string }> {
@@ -53,6 +55,7 @@ export class AuthController {
   @ApiBadRequestResponse({
     description: 'Registration creation failed. Please check request body',
   })
+  @Public()
   @Post('register')
   @HttpCode(201)
   register(@Body() body: CreateUserDto): Promise<UserEntity> {

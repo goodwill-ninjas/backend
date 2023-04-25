@@ -39,6 +39,7 @@ export class UserEntity {
   @Column({ unique: true })
   username: string;
 
+  @Column()
   @Exclude()
   password: string;
 
