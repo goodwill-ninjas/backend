@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
+  ApiBearerAuth,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -26,6 +27,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get Users',
     description: 'Returns a list of all users.',
@@ -40,6 +42,7 @@ export class UserController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get User',
     description: 'Tries to find a single user matching the given id.',
@@ -56,6 +59,7 @@ export class UserController {
   }
 
   @Get(':id/donations')
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get User Donations',
     description: 'List all donations for given user.',
@@ -75,6 +79,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @HttpCode(204)
   @ApiOperation({
     summary: 'Delete User',
