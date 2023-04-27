@@ -28,7 +28,6 @@ describe('DonationController', () => {
         ...dto,
       };
     }),
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     removeDonation: jest.fn(),
   };
 
