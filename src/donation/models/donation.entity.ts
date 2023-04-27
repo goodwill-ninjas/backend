@@ -34,6 +34,13 @@ export class DonationEntity {
   user: UserEntity;
 
   @ApiProperty({
+    description: 'Whether the user was disqualified',
+    example: false,
+  })
+  @Column()
+  disqualified: boolean;
+
+  @ApiProperty({
     description: 'ID of user accompanying the requester',
     example: 2,
     nullable: true,
@@ -51,15 +58,17 @@ export class DonationEntity {
   @ApiProperty({
     description: 'Type of Blood Donation',
     example: 'whole',
+    nullable: true,
   })
-  @Column()
+  @Column({ nullable: true })
   donated_type: string;
 
   @ApiProperty({
     description: 'Amount of blood donated in milliliters',
     example: 450,
+    nullable: true,
   })
-  @Column()
+  @Column({ nullable: true })
   amount: number;
 
   @ApiProperty({
@@ -79,7 +88,8 @@ export class DonationEntity {
   hemoglobin: number;
 
   @ApiProperty({
-    description: 'User comments about the donation',
+    description:
+      'User comments about the donation or reasons for disqualification',
     example: 'Nurse warned me about low hemoglobin levels.',
     nullable: true,
   })
