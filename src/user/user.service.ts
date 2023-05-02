@@ -67,6 +67,7 @@ export class UserService {
 
       const newUser = await this.userRepository.create({
         ...userDetails,
+        avatar_id,
         avatar,
         experience: 0,
         settings: defaultSettings,
