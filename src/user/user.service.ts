@@ -114,6 +114,17 @@ export class UserService {
     payload: DonationSavedEvent,
   ): Promise<void> {
     await this.increaseUserExperience(payload.userId, payload.experienceAmount);
+    const userDonations = await this.donationRepository.findAndCount({
+      where: {
+        user_id: payload.userId,
+      },
+    });
+
+    const donationsCount: number = userDonations[1];
+    const totalBloodDonated: number = userDonations[0].reduce(
+      (total, donation) => total + donation.amount,
+      0,
+    );
   }
 
   private async increaseUserExperience(
