@@ -32,6 +32,7 @@ export class DonationService {
   async createDonation(dto: CreateDonationDto): Promise<DonationEntity> {
     const { user_id, ...donationDetails } = dto;
     const user = await this.userService.findUserById(user_id);
+    const experienceReward = 50;
 
     try {
       const newDonation = await this.donationRepository.create({
@@ -45,6 +46,7 @@ export class DonationService {
         new DonationSavedEvent({
           userId: user_id,
           donationId: newDonation.id,
+          experienceAmount: experienceReward,
         }),
       );
 

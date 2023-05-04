@@ -110,9 +110,23 @@ export class UserService {
   }
 
   @OnEvent('donation.saved', { async: true })
-  private handleDonationSavedEvent(payload: DonationSavedEvent): void {
-    console.log(
-      `--<EVENT LISTENER>--\nDONATION ${payload.donationId} HAS BEEN SAVED FOR USER ${payload.userId}`,
-    );
+  private async handleDonationSavedEvent(
+    payload: DonationSavedEvent,
+  ): Promise<void> {
+    await this.increaseUserExperience(payload.userId, payload.experienceAmount);
+  }
+
+  private async increaseUserExperience(
+    userId: number,
+    experienceAmount: number,
+  ): Promise<void> {
+    await this.userRepository
+      .createQueryBuilder('user')
+      .update()
+      .set({
+        experience: () => `experience + ${experienceAmount}`,
+      })
+      .where('id = :id', { id: userId })
+      .execute();
   }
 }
