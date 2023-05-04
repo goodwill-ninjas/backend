@@ -7,6 +7,8 @@ import { UserSettingEntity } from './models/user-setting.entity';
 import { ErrorCodes } from '../common/utilities/error-codes';
 import { DonationEntity } from '../donation/models/donation.entity';
 import { ImageEntity } from '../image/models/image.entity';
+import { OnEvent } from '@nestjs/event-emitter';
+import { DonationSavedEvent } from '../common/events/donations/DonationSaved';
 
 @Injectable()
 export class UserService {
@@ -105,5 +107,12 @@ export class UserService {
         `User with id ${id} not found`,
         HttpStatus.NOT_FOUND,
       );
+  }
+
+  @OnEvent('donation.saved', { async: true })
+  private handleDonationSavedEvent(payload: DonationSavedEvent): void {
+    console.log(
+      `--<EVENT LISTENER>--\nDONATION ${payload.donationId} HAS BEEN SAVED FOR USER ${payload.userId}`,
+    );
   }
 }

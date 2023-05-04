@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../../user/models/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 @Entity('donation')
 export class DonationEntity {
@@ -31,6 +32,7 @@ export class DonationEntity {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'user_id' })
+  @Exclude()
   user: UserEntity;
 
   @ApiProperty({
