@@ -45,7 +45,7 @@ export class DonationService {
         'donation.saved',
         new DonationSavedEvent({
           userId: user_id,
-          donationId: newDonation.id,
+          userGender: user.gender,
           experienceAmount: experienceReward,
         }),
       );

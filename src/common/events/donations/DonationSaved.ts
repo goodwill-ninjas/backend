@@ -1,15 +1,15 @@
 export class DonationSavedEvent {
   constructor(param: {
     userId: number;
-    donationId: number;
+    userGender: string;
     experienceAmount: number;
   }) {
     this.userId = param.userId;
-    this.donationId = param.donationId;
+    this.userGender = param.userGender;
     this.experienceAmount = param.experienceAmount;
   }
 
   userId: number;
-  donationId: number;
+  userGender: string;
   experienceAmount: number;
 }

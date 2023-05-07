@@ -10,7 +10,7 @@ export class FeatService {
     private readonly featRepository: Repository<FeatEntity>,
   ) {}
 
-  hello(): string {
-    return 'Hello from Feat Module';
+  async findFeats(): Promise<FeatEntity[]> {
+    return await this.featRepository.find();
   }
 }

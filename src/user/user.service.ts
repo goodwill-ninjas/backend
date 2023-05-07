@@ -9,6 +9,7 @@ import { DonationEntity } from '../donation/models/donation.entity';
 import { ImageEntity } from '../image/models/image.entity';
 import { OnEvent } from '@nestjs/event-emitter';
 import { DonationSavedEvent } from '../common/events/donations/DonationSaved';
+import { FeatEntity } from '../feat/models/feat.entity';
 
 @Injectable()
 export class UserService {
@@ -56,6 +57,10 @@ export class UserService {
         user_id: id,
       },
     });
+  }
+
+  async findUserFeats(id: number): Promise<FeatEntity[]> {
+    return undefined as FeatEntity[];
   }
 
   async createUser(dto: CreateUserDto): Promise<UserEntity> {
