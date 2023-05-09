@@ -6,9 +6,6 @@ import { UserEntity } from './models/user.entity';
 import { UserSettingEntity } from './models/user-setting.entity';
 import { DonationEntity } from '../donation/models/donation.entity';
 import { ImageEntity } from '../image/models/image.entity';
-import { FeatEntity } from '../feat/models/feat.entity';
-import { FeatCompletionEntity } from '../feat/models/feat-completion.entity';
-import { FeatRankEntity } from '../feat/models/feat-rank.entity';
 
 @Module({
   imports: [
@@ -17,9 +14,6 @@ import { FeatRankEntity } from '../feat/models/feat-rank.entity';
       UserSettingEntity,
       DonationEntity,
       ImageEntity,
-      FeatEntity,
-      FeatRankEntity,
-      FeatCompletionEntity,
     ]),
   ],
   providers: [UserService],

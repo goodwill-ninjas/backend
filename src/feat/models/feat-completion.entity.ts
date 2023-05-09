@@ -1,5 +1,4 @@
 import {
-  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -9,6 +8,7 @@ import {
 import { UserEntity } from '../../user/models/user.entity';
 import { FeatEntity } from './feat.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { FeatRankEntity } from './feat-rank.entity';
 
 @Entity('feat_completion')
 export class FeatCompletionEntity {
@@ -31,8 +31,9 @@ export class FeatCompletionEntity {
   @JoinColumn({ name: 'feat_id' })
   feat: FeatEntity;
 
-  @Column()
-  feat_rank: number;
+  @ManyToOne(() => FeatRankEntity)
+  @JoinColumn({ name: 'feat_rank_id' })
+  feat_rank: FeatRankEntity;
 
   @ApiProperty({
     description: 'Time of feat completion creation',

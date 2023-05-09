@@ -5,7 +5,8 @@ import { Repository } from 'typeorm';
 import { CreateDonationDto } from './dto/create-donation.dto';
 import { UserService } from '../user/user.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { DonationSavedEvent } from '../common/events/donations/DonationSaved';
+import { DonationSavedEvent } from '../common/events/donations/donationSaved';
+import { ExperienceIncreaseEvent } from '../common/events/experience/experienceIncrease';
 
 @Injectable()
 export class DonationService {
@@ -42,11 +43,18 @@ export class DonationService {
       await this.donationRepository.save(newDonation);
 
       this.eventEmitter.emit(
+        'experience.increase',
+        new ExperienceIncreaseEvent({
+          userId: user_id,
+          experienceAmount: experienceReward,
+        }),
+      );
+
+      this.eventEmitter.emit(
         'donation.saved',
         new DonationSavedEvent({
           userId: user_id,
           userGender: user.gender,
-          experienceAmount: experienceReward,
         }),
       );
 

@@ -8,8 +8,7 @@ import { ErrorCodes } from '../common/utilities/error-codes';
 import { DonationEntity } from '../donation/models/donation.entity';
 import { ImageEntity } from '../image/models/image.entity';
 import { OnEvent } from '@nestjs/event-emitter';
-import { DonationSavedEvent } from '../common/events/donations/DonationSaved';
-import { FeatEntity } from '../feat/models/feat.entity';
+import { ExperienceIncreaseEvent } from '../common/events/experience/experienceIncrease';
 
 @Injectable()
 export class UserService {
@@ -59,17 +58,24 @@ export class UserService {
     });
   }
 
-  async findUserFeats(id: number): Promise<FeatEntity[]> {
-    return undefined as FeatEntity[];
-  }
+  //TODO
+  // async findUserFeats(id: number): Promise<FeatEntity[]> {
+  //   return undefined as FeatEntity[];
+  // }
 
   async createUser(dto: CreateUserDto): Promise<UserEntity> {
+    const { avatar_id, ...userDetails } = dto;
+    const avatar = await this.imageRepository.findOneBy({
+      id: avatar_id,
+    });
+    if (!avatar)
+      throw new HttpException(
+        `Avatar with id: ${avatar_id} does not exist`,
+        HttpStatus.NOT_FOUND,
+      );
+
     try {
-      const { avatar_id, ...userDetails } = dto;
       const defaultSettings = await this.userSettingRepository.create();
-      const avatar = await this.imageRepository.findOneBy({
-        id: avatar_id,
-      });
       await this.userSettingRepository.save(defaultSettings);
 
       const newUser = await this.userRepository.create({
@@ -114,35 +120,17 @@ export class UserService {
       );
   }
 
-  @OnEvent('donation.saved', { async: true })
-  private async handleDonationSavedEvent(
-    payload: DonationSavedEvent,
-  ): Promise<void> {
-    await this.increaseUserExperience(payload.userId, payload.experienceAmount);
-    const userDonations = await this.donationRepository.findAndCount({
-      where: {
-        user_id: payload.userId,
-      },
-    });
-
-    const donationsCount: number = userDonations[1];
-    const totalBloodDonated: number = userDonations[0].reduce(
-      (total, donation) => total + donation.amount,
-      0,
-    );
-  }
-
-  private async increaseUserExperience(
-    userId: number,
-    experienceAmount: number,
+  @OnEvent('experience.increase', { async: true })
+  private async handleExperienceIncreaseEvent(
+    payload: ExperienceIncreaseEvent,
   ): Promise<void> {
     await this.userRepository
       .createQueryBuilder('user')
       .update()
       .set({
-        experience: () => `experience + ${experienceAmount}`,
+        experience: () => `experience + ${payload.experienceAmount}`,
       })
-      .where('id = :id', { id: userId })
+      .where('id = :id', { id: payload.userId })
       .execute();
   }
 }

@@ -79,26 +79,26 @@ export class UserController {
     return await this.userService.findUserDonations(id);
   }
 
-  @Get(':id/feats')
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Get User Feats',
-    description:
-      'List current feat status for given user - completed feats and their next ranks.',
-  })
-  @ApiOkResponse({
-    type: FeatEntity,
-    isArray: true,
-    description: 'List of completed feats and their next ranks for given user',
-  })
-  @ApiNotFoundResponse({
-    description: 'User with given id does not exist',
-  })
-  async getUserFeats(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<FeatEntity[]> {
-    return await this.userService.findUserFeats(id);
-  }
+  // @Get(':id/feats')
+  // @ApiBearerAuth()
+  // @ApiOperation({
+  //   summary: 'Get User Feats',
+  //   description:
+  //     'List current feat status for given user - completed feats and their next ranks.',
+  // })
+  // @ApiOkResponse({
+  //   type: FeatEntity,
+  //   isArray: true,
+  //   description: 'List of completed feats and their next ranks for given user',
+  // })
+  // @ApiNotFoundResponse({
+  //   description: 'User with given id does not exist',
+  // })
+  // async getUserFeats(
+  //   @Param('id', ParseIntPipe) id: number,
+  // ): Promise<FeatEntity[]> {
+  //   return await this.userService.findUserFeats(id);
+  // }
 
   @Delete(':id')
   @ApiBearerAuth()
