@@ -7,7 +7,6 @@ import { DonationSavedEvent } from '../common/events/donations/donationSaved';
 import { DonationEntity } from '../donation/models/donation.entity';
 import { FeatNames } from '../common/enum/feat-names.enum';
 import { GenderIdentity } from '../common/enum/gender-identity.enum';
-import { TrimmedFeatEntity } from './interfaces/trimmed-feat-entity.interface';
 import { FeatRankEntity } from './models/feat-rank.entity';
 import { FeatCompletionEntity } from './models/feat-completion.entity';
 
@@ -36,7 +35,7 @@ export class FeatService {
   private async handleDonationSavedEvent(
     payload: DonationSavedEvent,
   ): Promise<void> {
-    const feats = this.trimFeatEntities(await this.findFeats());
+    const feats = await this.findFeats();
     const userDonations = await this.donationRepository.findAndCount({
       where: {
         user_id: payload.userId,
@@ -49,7 +48,7 @@ export class FeatService {
 
     this.handleBloodDonorFeat(
       feats.find(feat => feat.name === FeatNames.BLOOD_DONOR),
-      userDonations[1],
+      userDonations[1], // donations count returned by findAndCount() method of Repository<T>
     );
 
     this.handleHonoraryDonorFeat(
@@ -65,35 +64,14 @@ export class FeatService {
     );
   }
 
-  private trimFeatEntities(feats: FeatEntity[]): TrimmedFeatEntity[] {
-    return feats.map(feat => {
-      const { name, ranks } = feat;
-      const trimmedRanks = ranks.map(
-        ({ rank, requirement, experience_award }) => ({
-          rank,
-          requirement,
-          experience_award,
-        }),
-      );
-
-      return {
-        name,
-        ranks: trimmedRanks,
-      };
-    });
-  }
-
-  private handleBloodDonorFeat(
-    feat: TrimmedFeatEntity,
-    donationsCount: number,
-  ): void {
+  private handleBloodDonorFeat(feat: FeatEntity, donationsCount: number): void {
     console.log('\nhandleBloodDonorFeat');
     console.log(feat);
     console.log(donationsCount);
   }
 
   private handleHonoraryDonorFeat(
-    feat: TrimmedFeatEntity,
+    feat: FeatEntity,
     bloodDonatedInMilliliters: number,
   ): void {
     console.log('\nhandleHonoraryDonorFeat');
@@ -102,7 +80,7 @@ export class FeatService {
   }
 
   private handleHealthOfNationDonorFeat(
-    feat: TrimmedFeatEntity,
+    feat: FeatEntity,
     bloodDonatedInMilliliters: number,
   ): void {
     console.log('\nhandleHealthOfNationDonorFeat');
