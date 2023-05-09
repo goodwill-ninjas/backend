@@ -1,4 +1,5 @@
 import {
+  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -27,13 +28,22 @@ export class FeatCompletionEntity {
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
+  @Column()
+  user_id: number;
+
   @ManyToOne(() => FeatEntity, feat => feat.completions)
   @JoinColumn({ name: 'feat_id' })
   feat: FeatEntity;
 
+  @Column()
+  feat_id: number;
+
   @ManyToOne(() => FeatRankEntity)
   @JoinColumn({ name: 'feat_rank_id' })
   feat_rank: FeatRankEntity;
+
+  @Column()
+  feat_rank_id: number;
 
   @ApiProperty({
     description: 'Time of feat completion creation',
