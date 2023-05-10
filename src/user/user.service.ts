@@ -10,6 +10,7 @@ import { ImageEntity } from '../image/models/image.entity';
 import { OnEvent } from '@nestjs/event-emitter';
 import { ExperienceIncreaseEvent } from '../common/events/experience/experienceIncrease';
 import { FeatCompletionEntity } from '../feat/models/feat-completion.entity';
+import { UserCompletedFeat } from './dto/user-completed-feat.dto';
 
 @Injectable()
 export class UserService {
@@ -61,14 +62,16 @@ export class UserService {
     });
   }
 
-  async findUserCompletedFeats(id: number): Promise<FeatCompletionEntity[]> {
+  async findUserCompletedFeats(id: number): Promise<UserCompletedFeat[]> {
     await this.findUserById(id);
 
-    return await this.featCompletionRepository.find({
+    const featCompletions = (await this.featCompletionRepository.find({
       where: {
         user_id: id,
       },
-    });
+    })) as Array<FeatCompletionEntity>;
+
+    return undefined as Array<UserCompletedFeat>;
   }
 
   async createUser(dto: CreateUserDto): Promise<UserEntity> {

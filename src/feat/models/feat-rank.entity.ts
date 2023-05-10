@@ -26,7 +26,7 @@ export class FeatRankEntity {
   })
   @ManyToOne(() => FeatEntity, feat => feat.ranks)
   @JoinColumn({ name: 'feat_id' })
-  feat: FeatEntity;
+  feat: () => FeatEntity;
 
   @ApiProperty({
     description: 'Number of which step is this rank',

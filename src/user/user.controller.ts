@@ -19,7 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { UserEntity } from './models/user.entity';
 import { DonationEntity } from '../donation/models/donation.entity';
-import { FeatCompletionEntity } from '../feat/models/feat-completion.entity';
+import { UserCompletedFeat } from './dto/user-completed-feat.dto';
 
 @ApiTags('User')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -86,7 +86,7 @@ export class UserController {
     description: 'List current feat status for given user - completed feats.',
   })
   @ApiOkResponse({
-    type: () => FeatCompletionEntity,
+    type: UserCompletedFeat,
     isArray: true,
     description: 'List of completed feats for given user',
   })
@@ -95,7 +95,7 @@ export class UserController {
   })
   async getUserFeats(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<FeatCompletionEntity[]> {
+  ): Promise<UserCompletedFeat[]> {
     return await this.userService.findUserCompletedFeats(id);
   }
 

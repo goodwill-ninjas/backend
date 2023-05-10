@@ -27,7 +27,7 @@ export class FeatCompletionEntity {
   })
   @ManyToOne(() => UserEntity, user => user.achieved_feats)
   @JoinColumn({ name: 'user_id' })
-  user: () => UserEntity;
+  user: UserEntity;
 
   @Column()
   user_id: number;
@@ -41,7 +41,7 @@ export class FeatCompletionEntity {
     eager: true,
   })
   @JoinColumn({ name: 'feat_id' })
-  feat: () => FeatEntity;
+  feat: FeatEntity;
 
   @Exclude()
   @Column()
@@ -56,7 +56,7 @@ export class FeatCompletionEntity {
     eager: true,
   })
   @JoinColumn({ name: 'feat_rank_id' })
-  feat_rank: () => FeatRankEntity;
+  feat_rank: FeatRankEntity;
 
   @Exclude()
   @Column()
