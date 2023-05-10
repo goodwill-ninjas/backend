@@ -10,6 +10,7 @@ import { UserEntity } from '../../user/models/user.entity';
 import { FeatEntity } from './feat.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { FeatRankEntity } from './feat-rank.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('feat_completion')
 export class FeatCompletionEntity {
@@ -26,22 +27,38 @@ export class FeatCompletionEntity {
   })
   @ManyToOne(() => UserEntity, user => user.achieved_feats)
   @JoinColumn({ name: 'user_id' })
-  user: UserEntity;
+  user: () => UserEntity;
 
   @Column()
   user_id: number;
 
-  @ManyToOne(() => FeatEntity, feat => feat.completions)
+  @ApiProperty({
+    description:
+      'Feat in question and all of its ranks, including ones not yet achieved by the user',
+    example: FeatEntity,
+  })
+  @ManyToOne(() => FeatEntity, feat => feat.completions, {
+    eager: true,
+  })
   @JoinColumn({ name: 'feat_id' })
-  feat: FeatEntity;
+  feat: () => FeatEntity;
 
+  @Exclude()
   @Column()
   feat_id: number;
 
-  @ManyToOne(() => FeatRankEntity)
+  @ApiProperty({
+    description: 'Feat Ranks that have been achieved',
+    example: FeatRankEntity,
+    isArray: true,
+  })
+  @ManyToOne(() => FeatRankEntity, {
+    eager: true,
+  })
   @JoinColumn({ name: 'feat_rank_id' })
-  feat_rank: FeatRankEntity;
+  feat_rank: () => FeatRankEntity;
 
+  @Exclude()
   @Column()
   feat_rank_id: number;
 
