@@ -106,6 +106,13 @@ export class FeatService {
     );
   }
 
+  /**
+   *  1. For given FeatEntity loop through every FeatRankEntity and compare Rank.Requirement with featContextValue to check if requirement has been met.
+   *  2. If requirement has been met store ID of the Rank and its experience reward. If exists check next Rank.
+   *  3. If requirement has not been met and thus no Rank ID is being stored - abandon procedure.
+   *  4. Check if FeatCompletionEntity for given User, Feat and Feat Rank already exists.
+   *  5. If this specific FeatCompletionEntity does not exist - create and save it to the DB.
+   * */
   private async handleFeatCompletion(
     userId: number,
     feat: FeatEntity,
