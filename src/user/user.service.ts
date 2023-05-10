@@ -9,6 +9,7 @@ import { DonationEntity } from '../donation/models/donation.entity';
 import { ImageEntity } from '../image/models/image.entity';
 import { OnEvent } from '@nestjs/event-emitter';
 import { ExperienceIncreaseEvent } from '../common/events/experience/experienceIncrease';
+import { FeatCompletionEntity } from '../feat/models/feat-completion.entity';
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,8 @@ export class UserService {
     private readonly donationRepository: Repository<DonationEntity>,
     @InjectRepository(ImageEntity)
     private readonly imageRepository: Repository<ImageEntity>,
+    @InjectRepository(FeatCompletionEntity)
+    private readonly featCompletionRepository: Repository<FeatCompletionEntity>,
   ) {}
 
   async findUsers(): Promise<UserEntity[]> {
@@ -58,10 +61,15 @@ export class UserService {
     });
   }
 
-  //TODO
-  // async findUserFeats(id: number): Promise<FeatEntity[]> {
-  //   return undefined as FeatEntity[];
-  // }
+  async findUserCompletedFeats(id: number): Promise<FeatCompletionEntity[]> {
+    await this.findUserById(id);
+
+    return await this.featCompletionRepository.find({
+      where: {
+        user_id: id,
+      },
+    });
+  }
 
   async createUser(dto: CreateUserDto): Promise<UserEntity> {
     const { avatar_id, ...userDetails } = dto;
