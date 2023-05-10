@@ -30,11 +30,11 @@ export class UserCompletedFeat {
     description: 'Ranks of the given feat that user has achieved',
     example: 'foo@bar.com',
   })
-  achievedRanks: Array<FeatRankEntity>;
+  achievedRanks: Array<FeatRankEntity> | null;
 
   @ApiProperty({
     description: 'Rank that is next to be achieved by the user',
     example: 'foo@bar.com',
   })
-  nextRank: FeatRankEntity | null;
+  nextRanks: Array<FeatRankEntity> | null;
 }
