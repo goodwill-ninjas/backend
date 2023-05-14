@@ -7,6 +7,11 @@ import { UserSettingEntity } from './models/user-setting.entity';
 import { ErrorCodes } from '../common/utilities/error-codes';
 import { DonationEntity } from '../donation/models/donation.entity';
 import { ImageEntity } from '../image/models/image.entity';
+import { OnEvent } from '@nestjs/event-emitter';
+import { ExperienceIncreaseEvent } from '../common/events/experience/experienceIncrease';
+import { FeatCompletionEntity } from '../feat/models/feat-completion.entity';
+import { UserCompletedFeat } from './dto/user-completed-feat.dto';
+import { FeatEntity } from '../feat/models/feat.entity';
 
 @Injectable()
 export class UserService {
@@ -19,6 +24,10 @@ export class UserService {
     private readonly donationRepository: Repository<DonationEntity>,
     @InjectRepository(ImageEntity)
     private readonly imageRepository: Repository<ImageEntity>,
+    @InjectRepository(FeatEntity)
+    private readonly featRepository: Repository<FeatEntity>,
+    @InjectRepository(FeatCompletionEntity)
+    private readonly featCompletionRepository: Repository<FeatCompletionEntity>,
   ) {}
 
   async findUsers(): Promise<UserEntity[]> {
@@ -56,13 +65,66 @@ export class UserService {
     });
   }
 
+  async findUserCompletedFeats(id: number): Promise<UserCompletedFeat[]> {
+    await this.findUserById(id);
+
+    const highestRankAchievedPerFeat =
+      (await this.featCompletionRepository.query(
+        'SELECT \n' +
+          'fc.feat_id,\n' +
+          'MAX(fr.rank) AS achieved_feat_rank\n' +
+          'FROM feat_completion fc\n' +
+          'JOIN feat_rank fr ON fr.id = fc.feat_rank_id\n' +
+          'WHERE fc.user_id = $1\n' +
+          'GROUP BY fc.feat_id',
+        [id],
+      )) as Array<{ feat_id: number; achieved_feat_rank: number }>;
+
+    const featIdsToKeep = highestRankAchievedPerFeat.map(
+      rankAchieved => rankAchieved.feat_id,
+    );
+
+    const feats = await this.featRepository
+      .find()
+      .then(feats => feats.filter(feat => featIdsToKeep.includes(feat.id)));
+
+    return feats.map(feat => {
+      const achievedRanks = feat.ranks.filter(
+        rank =>
+          rank.rank <=
+          highestRankAchievedPerFeat.find(match => match.feat_id === feat.id)
+            ?.achieved_feat_rank,
+      );
+      const nextRanks = feat.ranks.filter(
+        rank =>
+          rank.rank >
+          highestRankAchievedPerFeat.find(match => match.feat_id === feat.id)
+            ?.achieved_feat_rank,
+      );
+      return {
+        userId: id,
+        featId: feat.id,
+        featName: feat.name,
+        featDescription: feat.description,
+        achievedRanks,
+        nextRanks,
+      };
+    });
+  }
+
   async createUser(dto: CreateUserDto): Promise<UserEntity> {
+    const { avatar_id, ...userDetails } = dto;
+    const avatar = await this.imageRepository.findOneBy({
+      id: avatar_id,
+    });
+    if (!avatar)
+      throw new HttpException(
+        `Avatar with id: ${avatar_id} does not exist`,
+        HttpStatus.NOT_FOUND,
+      );
+
     try {
-      const { avatar_id, ...userDetails } = dto;
       const defaultSettings = await this.userSettingRepository.create();
-      const avatar = await this.imageRepository.findOneBy({
-        id: avatar_id,
-      });
       await this.userSettingRepository.save(defaultSettings);
 
       const newUser = await this.userRepository.create({
@@ -105,5 +167,19 @@ export class UserService {
         `User with id ${id} not found`,
         HttpStatus.NOT_FOUND,
       );
+  }
+
+  @OnEvent('experience.increase', { async: true })
+  private async handleExperienceIncreaseEvent(
+    payload: ExperienceIncreaseEvent,
+  ): Promise<void> {
+    await this.userRepository
+      .createQueryBuilder('user')
+      .update()
+      .set({
+        experience: () => `experience + ${payload.experienceAmount}`,
+      })
+      .where('id = :id', { id: payload.userId })
+      .execute();
   }
 }

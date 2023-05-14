@@ -89,12 +89,14 @@ export class UserEntity {
   })
   donations: DonationEntity[];
 
+  @Exclude()
   @OneToMany(() => SocialMediaPostEntity, post => post.author)
   social_media_posts: SocialMediaPostEntity[];
 
   @OneToMany(() => FeatCompletionEntity, completion => completion.user)
   achieved_feats: FeatCompletionEntity[];
 
+  @Exclude()
   @OneToMany(() => UserEntity, user => user.id)
   invited_users: UserEntity[];
 

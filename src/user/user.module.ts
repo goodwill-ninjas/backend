@@ -6,6 +6,8 @@ import { UserEntity } from './models/user.entity';
 import { UserSettingEntity } from './models/user-setting.entity';
 import { DonationEntity } from '../donation/models/donation.entity';
 import { ImageEntity } from '../image/models/image.entity';
+import { FeatCompletionEntity } from '../feat/models/feat-completion.entity';
+import { FeatEntity } from '../feat/models/feat.entity';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { ImageEntity } from '../image/models/image.entity';
       UserSettingEntity,
       DonationEntity,
       ImageEntity,
+      FeatEntity,
+      FeatCompletionEntity,
     ]),
   ],
   providers: [UserService],

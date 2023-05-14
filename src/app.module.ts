@@ -20,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
 import { configValidationSchema } from './common/utilities/config-validation.schema';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -38,6 +39,15 @@ import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
       database: process.env.POSTGRES_DATABASE,
       autoLoadEntities: true,
       synchronize: true,
+    }),
+    EventEmitterModule.forRoot({
+      wildcard: false,
+      delimiter: '.',
+      newListener: false,
+      removeListener: false,
+      maxListeners: 5,
+      verboseMemoryLeak: true,
+      ignoreErrors: false,
     }),
     UserModule,
     DonationModule,

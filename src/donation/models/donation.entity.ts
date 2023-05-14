@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../../user/models/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 @Entity('donation')
 export class DonationEntity {
@@ -31,7 +32,15 @@ export class DonationEntity {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'user_id' })
+  @Exclude()
   user: UserEntity;
+
+  @ApiProperty({
+    description: 'Whether the user was disqualified',
+    example: false,
+  })
+  @Column()
+  disqualified: boolean;
 
   @ApiProperty({
     description: 'ID of user accompanying the requester',
@@ -51,15 +60,17 @@ export class DonationEntity {
   @ApiProperty({
     description: 'Type of Blood Donation',
     example: 'whole',
+    nullable: true,
   })
-  @Column()
+  @Column({ nullable: true })
   donated_type: string;
 
   @ApiProperty({
     description: 'Amount of blood donated in milliliters',
     example: 450,
+    nullable: true,
   })
-  @Column()
+  @Column({ nullable: true })
   amount: number;
 
   @ApiProperty({
@@ -79,7 +90,8 @@ export class DonationEntity {
   hemoglobin: number;
 
   @ApiProperty({
-    description: 'User comments about the donation',
+    description:
+      'User comments about the donation or reasons for disqualification',
     example: 'Nurse warned me about low hemoglobin levels.',
     nullable: true,
   })

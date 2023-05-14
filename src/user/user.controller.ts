@@ -19,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { UserEntity } from './models/user.entity';
 import { DonationEntity } from '../donation/models/donation.entity';
+import { UserCompletedFeat } from './dto/user-completed-feat.dto';
 
 @ApiTags('User')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -76,6 +77,26 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<DonationEntity[]> {
     return await this.userService.findUserDonations(id);
+  }
+
+  @Get(':id/feats')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Get User Completed Feats',
+    description: 'List current feat status for given user - completed feats.',
+  })
+  @ApiOkResponse({
+    type: UserCompletedFeat,
+    isArray: true,
+    description: 'List of completed feats for given user',
+  })
+  @ApiNotFoundResponse({
+    description: 'User with given id does not exist',
+  })
+  async getUserFeats(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<UserCompletedFeat[]> {
+    return await this.userService.findUserCompletedFeats(id);
   }
 
   @Delete(':id')
