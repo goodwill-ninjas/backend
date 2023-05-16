@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DonationEntity } from './models/donation.entity';
 import { UserService } from '../user/user.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 describe('DonationService', () => {
   const exampleDonation = {
@@ -47,6 +48,7 @@ describe('DonationService', () => {
           provide: getRepositoryToken(DonationEntity),
           useValue: mockDonationRepository,
         },
+        EventEmitter2,
       ],
     })
       .overrideProvider(UserService)
