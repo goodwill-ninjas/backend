@@ -99,6 +99,14 @@ export class DonationEntity {
   details: string;
 
   @ApiProperty({
+    description: 'Which arm was used during donation',
+    example: 'Left',
+    nullable: true,
+  })
+  @Column({ nullable: true })
+  arm: string;
+
+  @ApiProperty({
     description: 'Time of the donation',
     example: '2002-02-02T22:22:22.22Z',
   })
