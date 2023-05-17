@@ -101,6 +101,13 @@ export class UserEntity {
   invited_users: UserEntity[];
 
   @ApiProperty({
+    description: 'Whether the user has verified his email ',
+    example: true,
+  })
+  @Column()
+  has_verified_email: boolean;
+
+  @ApiProperty({
     description: 'Time of user creation',
     example: '2002-02-02T22:22:22.22Z',
   })

@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './models/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserSettingEntity } from './models/user-setting.entity';
 import { ErrorCodes } from '../common/utilities/error-codes';
@@ -132,6 +132,7 @@ export class UserService {
         avatar,
         experience: 0,
         settings: defaultSettings,
+        has_verified_email: false,
       });
       await this.userRepository.save(newUser);
 
@@ -181,5 +182,14 @@ export class UserService {
       })
       .where('id = :id', { id: payload.userId })
       .execute();
+  }
+
+  async updateUserEmailVerification(id: number): Promise<UpdateResult> {
+    return await this.userRepository.update(
+      { id },
+      {
+        has_verified_email: true,
+      },
+    );
   }
 }
