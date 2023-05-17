@@ -17,6 +17,8 @@ import { UserWithExperienceDetails } from './dto/user-with-experience-details.dt
 
 @Injectable()
 export class UserService {
+  private levelThresholds = this.generateLevelThresholds(10);
+
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -211,15 +213,11 @@ export class UserService {
   }
 
   private calculateLevel(experience: number): ExperienceDetails {
-    const maximumLevel = 10;
-    const levelThresholds = this.generateLevelThresholds(maximumLevel);
-    console.log(levelThresholds);
-
     let currentLevel = 1;
     let minExperience = 0;
     let maxExperience = 0;
 
-    for (const record of levelThresholds) {
+    for (const record of this.levelThresholds) {
       if (experience < record.threshold) {
         maxExperience = record.threshold - 1;
         break;
