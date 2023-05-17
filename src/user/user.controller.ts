@@ -1,4 +1,5 @@
 import {
+  Body,
   ClassSerializerInterceptor,
   Controller,
   Delete,
@@ -6,11 +7,13 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
+  Patch,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
   ApiBearerAuth,
+  ApiConflictResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -20,6 +23,7 @@ import {
 import { UserEntity } from './models/user.entity';
 import { DonationEntity } from '../donation/models/donation.entity';
 import { UserCompletedFeat } from './dto/user-completed-feat.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('User')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -114,5 +118,25 @@ export class UserController {
   })
   async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.userService.removeUser(id);
+  }
+
+  @Patch(':id')
+  @ApiBearerAuth()
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Update User',
+    description: 'Updates selected user details and user settings.',
+  })
+  @ApiConflictResponse({
+    description: 'Requested email or username is already taken',
+  })
+  @ApiNotFoundResponse({
+    description: 'User with given id does not exist',
+  })
+  async patchUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateUserDto,
+  ): Promise<UserEntity> {
+    return await this.userService.updateUser(id, body);
   }
 }

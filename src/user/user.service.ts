@@ -12,6 +12,7 @@ import { ExperienceIncreaseEvent } from '../common/events/experience/experienceI
 import { FeatCompletionEntity } from '../feat/models/feat-completion.entity';
 import { UserCompletedFeat } from './dto/user-completed-feat.dto';
 import { FeatEntity } from '../feat/models/feat.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -167,6 +168,45 @@ export class UserService {
         `User with id ${id} not found`,
         HttpStatus.NOT_FOUND,
       );
+  }
+
+  async updateUser(id: number, dto: UpdateUserDto): Promise<UserEntity> {
+    await this.findUserById(id);
+    const userSettings = (await this.userSettingRepository
+      .createQueryBuilder('settings')
+      .where('settings.user_id = :id', { id })
+      .getOne()) as UserSettingEntity;
+
+    try {
+      await this.userSettingRepository.update(
+        { id: userSettings.id },
+        {
+          theme: dto.theme,
+          font_size: dto.fontSize,
+          event_notifications: dto.eventNotifications,
+          reminder_notifications: dto.reminderNotifications,
+        },
+      );
+
+      await this.userRepository.update(
+        { id },
+        {
+          email: dto.email,
+          username: dto.username,
+        },
+      );
+    } catch (error) {
+      if (error.code === ErrorCodes.UNIQUE_VALUE) {
+        const key = error.detail
+          .split(' ')[1]
+          .split('=')[0]
+          .substring(1)
+          .slice(0, -1);
+        throw new HttpException(`${key} is already taken`, HttpStatus.CONFLICT);
+      }
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+    return await this.findUserById(id);
   }
 
   @OnEvent('experience.increase', { async: true })
