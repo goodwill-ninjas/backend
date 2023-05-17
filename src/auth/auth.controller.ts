@@ -12,6 +12,7 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserEntity } from '../user/models/user.entity';
 import {
   ApiBadRequestResponse,
+  ApiConflictResponse,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
@@ -51,6 +52,9 @@ export class AuthController {
     type: UserEntity,
     description:
       'Registered user object with related user settings as response',
+  })
+  @ApiConflictResponse({
+    description: 'Email or Username already taken.',
   })
   @ApiBadRequestResponse({
     description: 'Registration creation failed. Please check request body',
