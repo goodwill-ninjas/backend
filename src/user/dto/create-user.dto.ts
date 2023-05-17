@@ -3,6 +3,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 import { BloodType } from '../../common/enum/blood-type.enum';
@@ -53,8 +54,9 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'User avatar id',
     example: 1,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   avatar_id: number;
 }
