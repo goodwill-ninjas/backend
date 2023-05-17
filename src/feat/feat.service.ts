@@ -79,6 +79,7 @@ export class FeatService {
     const userDonations = await this.donationRepository.findAndCount({
       where: {
         user_id: payload.userId,
+        disqualified: false,
       },
     });
     const bloodDonatedInLiters: number =

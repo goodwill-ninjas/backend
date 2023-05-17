@@ -32,6 +32,19 @@ export class DonationService {
 
   async createDonation(dto: CreateDonationDto): Promise<DonationEntity> {
     const { user_id, ...donationDetails } = dto;
+    if (!dto.disqualified) {
+      if (!dto.amount)
+        throw new HttpException(
+          'amount must be a number conforming to the specified constraints',
+          HttpStatus.BAD_REQUEST,
+        );
+      if (!dto.donated_type)
+        throw new HttpException(
+          'donated_type must be one of the following values: whole, plasma, power, platelet',
+          HttpStatus.BAD_REQUEST,
+        );
+    }
+
     const user = await this.userService.findUserById(user_id);
     const experienceReward = 50;
 
@@ -41,6 +54,8 @@ export class DonationService {
         user,
       });
       await this.donationRepository.save(newDonation);
+
+      if (dto.disqualified) return newDonation;
 
       this.eventEmitter.emit(
         'experience.increase',

@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsEnum,
   IsISO8601,
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsString,
   Matches,
 } from 'class-validator';
 import { DonationType } from '../../common/enum/donation-type.enum';
@@ -19,6 +21,13 @@ export class CreateDonationDto {
   user_id: number;
 
   @ApiProperty({
+    description: 'Whether the user was disqualified',
+    example: false,
+  })
+  @IsBoolean()
+  disqualified: boolean;
+
+  @ApiProperty({
     description: 'ID of user accompanying the requester',
     example: 2,
     nullable: true,
@@ -30,18 +39,20 @@ export class CreateDonationDto {
   @ApiProperty({
     description: 'Type of Blood Donation',
     example: 'whole',
+    nullable: true,
   })
-  @IsNotEmpty()
   @IsEnum(DonationType)
-  donated_type: string;
+  @IsOptional()
+  donated_type?: string;
 
   @ApiProperty({
     description: 'Amount of blood donated in milliliters',
     example: 450,
+    nullable: true,
   })
-  @IsNotEmpty()
   @IsNumber()
-  amount: number;
+  @IsOptional()
+  amount?: number;
 
   @ApiProperty({
     description: 'Systolic and diastolic pressure at the time of donation',
@@ -52,6 +63,7 @@ export class CreateDonationDto {
     message:
       "blood_pressure must be a string containing two numbers separated by '/' character, each number has maximum length of 3,",
   })
+  @IsOptional()
   blood_pressure?: string;
 
   @ApiProperty({
@@ -59,6 +71,8 @@ export class CreateDonationDto {
     example: 140,
     nullable: true,
   })
+  @IsString()
+  @IsOptional()
   hemoglobin?: number;
 
   @ApiProperty({
@@ -66,6 +80,8 @@ export class CreateDonationDto {
     example: 'Nurse warned me about low hemoglobin levels.',
     nullable: true,
   })
+  @IsString()
+  @IsOptional()
   details?: string;
 
   @ApiProperty({
