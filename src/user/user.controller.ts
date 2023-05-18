@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   Param,
   ParseIntPipe,
@@ -14,6 +15,7 @@ import { UserService } from './user.service';
 import {
   ApiBearerAuth,
   ApiConflictResponse,
+  ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -60,10 +62,14 @@ export class UserController {
   @ApiNotFoundResponse({
     description: 'User with given id does not exist',
   })
+  @ApiForbiddenResponse({
+    description: 'User is forbidden from reading data',
+  })
   async getUser(
     @Param('id', ParseIntPipe) id: number,
+    @Headers('authorization') authHeader: string,
   ): Promise<UserWithExperienceDetails> {
-    return await this.userService.findUserById(id);
+    return await this.userService.findUserById(id, authHeader);
   }
 
   @Get(':id/donations')
@@ -80,10 +86,14 @@ export class UserController {
   @ApiNotFoundResponse({
     description: 'User with given id does not exist',
   })
+  @ApiForbiddenResponse({
+    description: 'User is forbidden from reading data',
+  })
   async getUserDonations(
     @Param('id', ParseIntPipe) id: number,
+    @Headers('authorization') authHeader: string,
   ): Promise<DonationEntity[]> {
-    return await this.userService.findUserDonations(id);
+    return await this.userService.findUserDonations(id, authHeader);
   }
 
   @Get(':id/feats')
@@ -100,10 +110,14 @@ export class UserController {
   @ApiNotFoundResponse({
     description: 'User with given id does not exist',
   })
+  @ApiForbiddenResponse({
+    description: 'User is forbidden from reading data',
+  })
   async getUserFeats(
     @Param('id', ParseIntPipe) id: number,
+    @Headers('authorization') authHeader: string,
   ): Promise<UserCompletedFeat[]> {
-    return await this.userService.findUserCompletedFeats(id);
+    return await this.userService.findUserCompletedFeats(id, authHeader);
   }
 
   @Delete(':id')
@@ -119,8 +133,14 @@ export class UserController {
   @ApiNotFoundResponse({
     description: 'User with given id does not exist',
   })
-  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    await this.userService.removeUser(id);
+  @ApiForbiddenResponse({
+    description: 'User is forbidden from deleting data',
+  })
+  async deleteUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Headers('authorization') authHeader: string,
+  ): Promise<void> {
+    await this.userService.removeUser(id, authHeader);
   }
 
   @Patch(':id')
@@ -136,10 +156,14 @@ export class UserController {
   @ApiNotFoundResponse({
     description: 'User with given id does not exist',
   })
+  @ApiForbiddenResponse({
+    description: 'User is forbidden from modifying data',
+  })
   async patchUser(
     @Param('id', ParseIntPipe) id: number,
+    @Headers('authorization') authHeader: string,
     @Body() body: UpdateUserDto,
   ): Promise<UserWithExperienceDetails> {
-    return await this.userService.updateUser(id, body);
+    return await this.userService.updateUser(id, authHeader, body);
   }
 }

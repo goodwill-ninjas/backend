@@ -19,18 +19,26 @@ export class DonationService {
     private eventEmitter: EventEmitter2,
   ) {}
 
-  async findDonationById(id: number): Promise<DonationEntity> {
+  async findDonationById(
+    id: number,
+    authHeader?: string,
+  ): Promise<DonationEntity> {
     const donation = await this.donationRepository.findOneBy({
       id,
     });
 
     if (!donation)
       throw new HttpException('Donation not found', HttpStatus.NOT_FOUND);
+    authHeader &&
+      (await this.userService.findUserById(donation.user_id, authHeader));
 
     return donation;
   }
 
-  async createDonation(dto: CreateDonationDto): Promise<DonationEntity> {
+  async createDonation(
+    dto: CreateDonationDto,
+    authHeader: string,
+  ): Promise<DonationEntity> {
     const { user_id, ...donationDetails } = dto;
     if (!dto.disqualified) {
       if (!dto.amount)
@@ -45,7 +53,7 @@ export class DonationService {
         );
     }
 
-    const user = await this.userService.findUserById(user_id);
+    const user = await this.userService.findUserById(user_id, authHeader);
     const experienceReward = 50;
 
     try {
@@ -83,7 +91,9 @@ export class DonationService {
    * implement restore functionality in case user
    * has deleted donation by accident.
    */
-  async removeDonation(id: number): Promise<void> {
+  async removeDonation(id: number, authHeader: string): Promise<void> {
+    await this.findDonationById(id, authHeader);
+
     const result = await this.donationRepository.softDelete(id);
 
     if (!result.affected)

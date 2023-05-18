@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -14,6 +20,7 @@ import { UpdateResult } from 'typeorm';
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -111,4 +118,20 @@ export class AuthService {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+
+  isUserAuthorizedToAccessData = async (
+    userIdFromParam: number,
+    authHeader: string,
+  ): Promise<boolean> => {
+    const jwtToken = authHeader.replace('Bearer ', '');
+    let userIdFromToken: number = null;
+
+    try {
+      const decodedToken: JwtPayload = await this.jwtService.verify(jwtToken);
+      userIdFromToken = decodedToken.context.user.userId;
+    } catch (error) {
+      throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
+    }
+    return userIdFromParam === userIdFromToken;
+  };
 }

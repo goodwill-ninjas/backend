@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   Param,
   ParseIntPipe,
@@ -16,6 +17,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -43,8 +45,11 @@ export class DonationController {
   @ApiNotFoundResponse({
     description: 'Donation with given id does not exist',
   })
-  getDonation(@Param('id', ParseIntPipe) id: number): Promise<DonationEntity> {
-    return this.donationService.findDonationById(id);
+  getDonation(
+    @Param('id', ParseIntPipe) id: number,
+    @Headers('authorization') authHeader: string,
+  ): Promise<DonationEntity> {
+    return this.donationService.findDonationById(id, authHeader);
   }
 
   @Post()
@@ -63,8 +68,14 @@ export class DonationController {
   @ApiBadRequestResponse({
     description: 'Donation creation failed. Please check request body',
   })
-  async addDonation(@Body() body: CreateDonationDto): Promise<DonationEntity> {
-    return await this.donationService.createDonation(body);
+  @ApiForbiddenResponse({
+    description: 'User is forbidden from creating data',
+  })
+  async addDonation(
+    @Body() body: CreateDonationDto,
+    @Headers('authorization') authHeader: string,
+  ): Promise<DonationEntity> {
+    return await this.donationService.createDonation(body, authHeader);
   }
 
   @Delete(':id')
@@ -80,7 +91,13 @@ export class DonationController {
   @ApiNotFoundResponse({
     description: 'Donation with given id does not exist',
   })
-  async deleteDonation(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    await this.donationService.removeDonation(id);
+  @ApiForbiddenResponse({
+    description: 'User is forbidden from deleting data',
+  })
+  async deleteDonation(
+    @Param('id', ParseIntPipe) id: number,
+    @Headers('authorization') authHeader: string,
+  ): Promise<void> {
+    await this.donationService.removeDonation(id, authHeader);
   }
 }
