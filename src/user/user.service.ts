@@ -181,7 +181,10 @@ export class UserService {
       );
   }
 
-  async updateUser(id: number, dto: UpdateUserDto): Promise<UserEntity> {
+  async updateUser(
+    id: number,
+    dto: UpdateUserDto,
+  ): Promise<UserWithExperienceDetails> {
     await this.findUserById(id);
     const userSettings = (await this.userSettingRepository
       .createQueryBuilder('settings')

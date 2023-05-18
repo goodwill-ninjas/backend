@@ -139,7 +139,7 @@ export class UserController {
   async patchUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateUserDto,
-  ): Promise<UserEntity> {
+  ): Promise<UserWithExperienceDetails> {
     return await this.userService.updateUser(id, body);
   }
 }
