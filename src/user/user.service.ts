@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './models/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserSettingEntity } from './models/user-setting.entity';
 import { ErrorCodes } from '../common/utilities/error-codes';
@@ -123,14 +123,18 @@ export class UserService {
 
   async createUser(dto: CreateUserDto): Promise<UserEntity> {
     const { avatar_id, ...userDetails } = dto;
-    const avatar = await this.imageRepository.findOneBy({
-      id: avatar_id,
-    });
-    if (!avatar)
-      throw new HttpException(
-        `Avatar with id: ${avatar_id} does not exist`,
-        HttpStatus.NOT_FOUND,
-      );
+    let avatar: ImageEntity = null;
+
+    if (avatar_id) {
+      avatar = await this.imageRepository.findOneBy({
+        id: avatar_id,
+      });
+      if (!avatar)
+        throw new HttpException(
+          `Avatar with id: ${avatar_id} does not exist`,
+          HttpStatus.BAD_REQUEST,
+        );
+    }
 
     try {
       const defaultSettings = await this.userSettingRepository.create();
@@ -141,6 +145,7 @@ export class UserService {
         avatar,
         experience: 0,
         settings: defaultSettings,
+        has_verified_email: false,
       });
       await this.userRepository.save(newUser);
 
@@ -152,10 +157,7 @@ export class UserService {
           .split('=')[0]
           .substring(1)
           .slice(0, -1);
-        throw new HttpException(
-          `${key} is already taken`,
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new HttpException(`${key} is already taken`, HttpStatus.CONFLICT);
       } else {
         throw new HttpException(error.detail, HttpStatus.BAD_REQUEST);
       }
@@ -233,5 +235,14 @@ export class UserService {
       minExperience: minExperience,
       maxExperience: maxExperience,
     };
+  }
+
+  async updateUserEmailVerification(id: number): Promise<UpdateResult> {
+    return await this.userRepository.update(
+      { id },
+      {
+        has_verified_email: true,
+      },
+    );
   }
 }

@@ -2,8 +2,10 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Get,
   HttpCode,
   Post,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -12,7 +14,9 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserEntity } from '../user/models/user.entity';
 import {
   ApiBadRequestResponse,
+  ApiConflictResponse,
   ApiCreatedResponse,
+  ApiExcludeEndpoint,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -52,13 +56,25 @@ export class AuthController {
     description:
       'Registered user object with related user settings as response',
   })
+  @ApiConflictResponse({
+    description: 'Email or Username already taken.',
+  })
   @ApiBadRequestResponse({
     description: 'Registration creation failed. Please check request body',
   })
   @Public()
   @Post('register')
   @HttpCode(201)
-  register(@Body() body: CreateUserDto): Promise<UserEntity> {
-    return this.authService.register(body);
+  async register(@Body() body: CreateUserDto): Promise<UserEntity> {
+    const registeredUser = await this.authService.register(body);
+    await this.authService.sendVerificationLink(body.email);
+    return registeredUser;
+  }
+
+  @ApiExcludeEndpoint()
+  @Public()
+  @Get('verify-email')
+  async confirmEmail(@Query('token') token: string): Promise<void> {
+    await this.authService.confirmEmailVerification(token);
   }
 }

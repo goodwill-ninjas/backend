@@ -69,12 +69,13 @@ export class UserEntity {
   @ApiProperty({
     description: 'User avatar id',
     example: 1,
+    nullable: true,
   })
-  @ManyToOne(() => ImageEntity, { eager: true })
+  @ManyToOne(() => ImageEntity, { eager: true, nullable: true })
   @JoinColumn({ name: 'avatar_id' })
   avatar: ImageEntity;
 
-  @Column()
+  @Column({ nullable: true })
   avatar_id: number;
 
   @ApiProperty({
@@ -99,6 +100,13 @@ export class UserEntity {
   @Exclude()
   @OneToMany(() => UserEntity, user => user.id)
   invited_users: UserEntity[];
+
+  @ApiProperty({
+    description: 'Whether the user has verified his email ',
+    example: true,
+  })
+  @Column()
+  has_verified_email: boolean;
 
   @ApiProperty({
     description: 'Time of user creation',
