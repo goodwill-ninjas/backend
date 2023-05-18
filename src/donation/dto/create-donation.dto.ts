@@ -10,6 +10,7 @@ import {
   Matches,
 } from 'class-validator';
 import { DonationType } from '../../common/enum/donation-type.enum';
+import { ArmType } from '../../common/enum/arm-type.enum';
 
 export class CreateDonationDto {
   @ApiProperty({
@@ -83,6 +84,15 @@ export class CreateDonationDto {
   @IsString()
   @IsOptional()
   details?: string;
+
+  @ApiProperty({
+    description: 'Which arm was used during donation',
+    example: 'Left',
+    nullable: true,
+  })
+  @IsOptional()
+  @IsEnum(ArmType)
+  arm: string;
 
   @ApiProperty({
     description: 'Time of the donation',

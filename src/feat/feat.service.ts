@@ -10,6 +10,7 @@ import { GenderIdentity } from '../common/enum/gender-identity.enum';
 import { FeatRankEntity } from './models/feat-rank.entity';
 import { FeatCompletionEntity } from './models/feat-completion.entity';
 import { ExperienceIncreaseEvent } from '../common/events/experience/experienceIncrease';
+import { ArmType } from '../common/enum/arm-type.enum';
 
 @Injectable()
 export class FeatService {
@@ -86,6 +87,16 @@ export class FeatService {
       userDonations[0].reduce((total, donation) => total + donation.amount, 0) /
       1000; // Divide by 1000 to get number of liters instead of milliliters
 
+    const hasUsedBothArms = (): boolean => {
+      const leftArm = userDonations[0].filter(
+        donation => donation.arm === ArmType.LEFT,
+      );
+      const rightArm = userDonations[0].filter(
+        donation => donation.arm === ArmType.RIGHT,
+      );
+      return leftArm.length > 0 && rightArm.length > 0;
+    };
+
     await this.handleFeatCompletion(
       payload.userId,
       feats.find(feat => feat.name === FeatNames.BLOOD_DONOR),
@@ -104,6 +115,12 @@ export class FeatService {
       payload.userId,
       feats.find(feat => feat.name === FeatNames.HEALTH_OF_NATION_DONOR),
       bloodDonatedInLiters,
+    );
+
+    await this.handleFeatCompletion(
+      payload.userId,
+      feats.find(feat => feat.name === FeatNames.AMBIDEXTROUS),
+      Number(hasUsedBothArms()), // Force change boolean value to number to reuse the function.
     );
   }
 
