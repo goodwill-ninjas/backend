@@ -69,12 +69,13 @@ export class UserEntity {
   @ApiProperty({
     description: 'User avatar id',
     example: 1,
+    nullable: true,
   })
-  @ManyToOne(() => ImageEntity, { eager: true })
+  @ManyToOne(() => ImageEntity, { eager: true, nullable: true })
   @JoinColumn({ name: 'avatar_id' })
   avatar: ImageEntity;
 
-  @Column()
+  @Column({ nullable: true })
   avatar_id: number;
 
   @ApiProperty({

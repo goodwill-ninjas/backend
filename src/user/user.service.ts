@@ -114,14 +114,18 @@ export class UserService {
 
   async createUser(dto: CreateUserDto): Promise<UserEntity> {
     const { avatar_id, ...userDetails } = dto;
-    const avatar = await this.imageRepository.findOneBy({
-      id: avatar_id,
-    });
-    if (!avatar)
-      throw new HttpException(
-        `Avatar with id: ${avatar_id} does not exist`,
-        HttpStatus.NOT_FOUND,
-      );
+    let avatar: ImageEntity = null;
+
+    if (avatar_id) {
+      avatar = await this.imageRepository.findOneBy({
+        id: avatar_id,
+      });
+      if (!avatar)
+        throw new HttpException(
+          `Avatar with id: ${avatar_id} does not exist`,
+          HttpStatus.BAD_REQUEST,
+        );
+    }
 
     try {
       const defaultSettings = await this.userSettingRepository.create();
