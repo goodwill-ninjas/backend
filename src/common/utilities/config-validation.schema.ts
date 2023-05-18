@@ -18,4 +18,13 @@ export const configValidationSchema = joi.object({
   NEST_PORT: joi.number().default(defaults.PORTS.API).required(),
   JWT_SECRET: joi.string().required(),
   JWT_EXPIRE: joi.string().default(defaults.JWT_EXPIRE).required(),
+  EMAIL_SERVICE: joi.string().required(),
+  EMAIL_USER: joi
+    .string()
+    .email({ tlds: { allow: false } })
+    .required(),
+  EMAIL_PASSWORD: joi.string().required(),
+  VERIFICATION_JWT_SECRET: joi.string().required(),
+  VERIFICATION_JWT_EXPIRE: joi.string().default(defaults.JWT_EXPIRE).required(),
+  VERIFICATION_URI: joi.string().uri().required(),
 });
