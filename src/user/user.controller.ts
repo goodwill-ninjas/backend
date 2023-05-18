@@ -20,6 +20,7 @@ import {
 import { UserEntity } from './models/user.entity';
 import { DonationEntity } from '../donation/models/donation.entity';
 import { UserCompletedFeat } from './dto/user-completed-feat.dto';
+import { UserWithExperienceDetails } from './dto/user-with-experience-details.dto';
 
 @ApiTags('User')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -49,13 +50,15 @@ export class UserController {
     description: 'Tries to find a single user matching the given id.',
   })
   @ApiOkResponse({
-    type: UserEntity,
+    type: UserWithExperienceDetails,
     description: 'Finds user with matching id',
   })
   @ApiNotFoundResponse({
     description: 'User with given id does not exist',
   })
-  async getUser(@Param('id', ParseIntPipe) id: number): Promise<UserEntity> {
+  async getUser(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<UserWithExperienceDetails> {
     return await this.userService.findUserById(id);
   }
 

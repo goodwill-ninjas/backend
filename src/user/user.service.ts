@@ -12,9 +12,13 @@ import { ExperienceIncreaseEvent } from '../common/events/experience/experienceI
 import { FeatCompletionEntity } from '../feat/models/feat-completion.entity';
 import { UserCompletedFeat } from './dto/user-completed-feat.dto';
 import { FeatEntity } from '../feat/models/feat.entity';
+import { ExperienceDetails } from './interfaces/experience-details';
+import { UserWithExperienceDetails } from './dto/user-with-experience-details.dto';
 
 @Injectable()
 export class UserService {
+  private levelThresholds = this.generateLevelThresholds(10);
+
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -34,15 +38,20 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async findUserById(id: number): Promise<UserEntity> {
+  async findUserById(id: number): Promise<UserWithExperienceDetails> {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .innerJoinAndSelect('user.settings', 'settings')
       .where('user.id = :id', { id })
       .getOne();
+    const expDetails = this.calculateLevel(user.experience);
 
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    return user;
+    delete user['experience'];
+    return {
+      ...user,
+      expDetails,
+    };
   }
 
   async findUserByEmail(email: string): Promise<UserEntity> {
@@ -183,6 +192,49 @@ export class UserService {
       })
       .where('id = :id', { id: payload.userId })
       .execute();
+  }
+
+  private generateLevelThresholds(
+    maximumLevel: number,
+  ): { level: number; threshold: number }[] {
+    const levelThresholds: { level: number; threshold: number }[] = [];
+    let currentThreshold = 50;
+
+    while (levelThresholds.length < maximumLevel) {
+      // round for nicer values in case frontend will want to show exp numbers instead of %
+      const roundedThreshold = Math.round(currentThreshold / 10) * 10;
+      levelThresholds.push({
+        level: levelThresholds.length + 1,
+        threshold: roundedThreshold,
+      });
+
+      currentThreshold += Math.round(currentThreshold * 0.75); // increment by 75% of the previous value
+    }
+
+    return levelThresholds;
+  }
+
+  private calculateLevel(experience: number): ExperienceDetails {
+    let currentLevel = 1;
+    let minExperience = 0;
+    let maxExperience = 0;
+
+    for (const record of this.levelThresholds) {
+      if (experience < record.threshold) {
+        maxExperience = record.threshold - 1;
+        break;
+      }
+
+      currentLevel = record.level;
+      minExperience = record.threshold;
+    }
+
+    return {
+      level: currentLevel,
+      currentExperience: experience,
+      minExperience: minExperience,
+      maxExperience: maxExperience,
+    };
   }
 
   async updateUserEmailVerification(id: number): Promise<UpdateResult> {
