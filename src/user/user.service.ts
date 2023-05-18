@@ -123,7 +123,7 @@ export class UserService {
       if (!avatar)
         throw new HttpException(
           `Avatar with id: ${avatar_id} does not exist`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.BAD_REQUEST,
         );
     }
 
