@@ -143,10 +143,7 @@ export class UserService {
           .split('=')[0]
           .substring(1)
           .slice(0, -1);
-        throw new HttpException(
-          `${key} is already taken`,
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new HttpException(`${key} is already taken`, HttpStatus.CONFLICT);
       } else {
         throw new HttpException(error.detail, HttpStatus.BAD_REQUEST);
       }
