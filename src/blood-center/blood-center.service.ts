@@ -41,10 +41,12 @@ export class BloodCenterService {
     detailsDto: SaveBloodCenterDetailsDto,
     authHeader: string,
   ): Promise<void> {
+    if (!authHeader)
+      throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
+
     if (
-      !authHeader ||
       this.configService.get('WEB_SCRAPER_TOKEN') !==
-        authHeader.replace('Token ', '')
+      authHeader.replace('Token ', '')
     )
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
 
