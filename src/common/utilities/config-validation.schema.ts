@@ -27,4 +27,5 @@ export const configValidationSchema = joi.object({
   VERIFICATION_JWT_SECRET: joi.string().required(),
   VERIFICATION_JWT_EXPIRE: joi.string().default(defaults.JWT_EXPIRE).required(),
   VERIFICATION_URI: joi.string().uri().required(),
+  WEB_SCRAPER_TOKEN: joi.string().required(),
 });

@@ -5,6 +5,7 @@ import { BloodCenterController } from './blood-center.controller';
 import { BloodCenterEntity } from './models/blood-center.entity';
 import { BloodCenterDetailEntity } from './models/blood-center-detail.entity';
 import { BloodCenterEventEntity } from './models/blood-center-event.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { BloodCenterEventEntity } from './models/blood-center-event.entity';
       BloodCenterDetailEntity,
       BloodCenterEventEntity,
     ]),
+    ConfigModule,
   ],
   providers: [BloodCenterService],
   controllers: [BloodCenterController],

@@ -7,6 +7,7 @@ import { SaveBloodCenterDetailsDto } from './dto/save-blood-center-details.dto';
 import { ParsedBloodCenterDetailRequest } from './interfaces/parsed-blood-center-detail.request';
 import { BloodType } from '../common/enum/blood-type.enum';
 import { BloodStatus } from '../common/enum/blood-status.enum';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class BloodCenterService {
@@ -15,6 +16,7 @@ export class BloodCenterService {
     private readonly bloodCenterRepository: Repository<BloodCenterEntity>,
     @InjectRepository(BloodCenterDetailEntity)
     private readonly bloodCenterDetailRepository: Repository<BloodCenterDetailEntity>,
+    private readonly configService: ConfigService,
   ) {}
 
   async findBloodCenters(): Promise<BloodCenterEntity[]> {
@@ -37,7 +39,15 @@ export class BloodCenterService {
 
   async saveBloodCenterDetails(
     detailsDto: SaveBloodCenterDetailsDto,
+    authHeader: string,
   ): Promise<void> {
+    if (
+      !authHeader ||
+      this.configService.get('WEB_SCRAPER_TOKEN') !==
+        authHeader.replace('Token ', '')
+    )
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+
     for (const request of this.parseSaveDetailsRequest(detailsDto)) {
       const { city, ...requestDetails } = request;
       const bloodCenter = await this.bloodCenterRepository.findOneBy({

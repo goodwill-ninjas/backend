@@ -3,6 +3,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  Headers,
   HttpStatus,
   Param,
   Post,
@@ -19,6 +20,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Public } from '../auth/guard/public-route.decorator';
 
@@ -78,9 +80,13 @@ export class BloodCenterController {
     description:
       'Creating new set of Blood Center Details failed. Please check request body',
   })
+  @ApiUnauthorizedResponse({
+    description: 'Requester is not authorized to save Blood Center Details',
+  })
   async createBloodDetailStatus(
     @Body() body: SaveBloodCenterDetailsDto,
+    @Headers('authorization') authHeader: string,
   ): Promise<void> {
-    return this.bloodCenterService.saveBloodCenterDetails(body);
+    return this.bloodCenterService.saveBloodCenterDetails(body, authHeader);
   }
 }
