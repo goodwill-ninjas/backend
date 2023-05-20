@@ -94,7 +94,9 @@ export class UserEntity {
   @OneToMany(() => SocialMediaPostEntity, post => post.author)
   social_media_posts: SocialMediaPostEntity[];
 
-  @OneToMany(() => FeatCompletionEntity, completion => completion.user)
+  @OneToMany(() => FeatCompletionEntity, completion => completion.user, {
+    cascade: true,
+  })
   achieved_feats: FeatCompletionEntity[];
 
   @Exclude()

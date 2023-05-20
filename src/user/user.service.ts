@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './models/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
@@ -15,6 +21,7 @@ import { FeatEntity } from '../feat/models/feat.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ExperienceDetails } from './interfaces/experience-details';
 import { UserWithExperienceDetails } from './dto/user-with-experience-details.dto';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -33,21 +40,36 @@ export class UserService {
     private readonly featRepository: Repository<FeatEntity>,
     @InjectRepository(FeatCompletionEntity)
     private readonly featCompletionRepository: Repository<FeatCompletionEntity>,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
   ) {}
 
   async findUsers(): Promise<UserEntity[]> {
     return await this.userRepository.find();
   }
 
-  async findUserById(id: number): Promise<UserWithExperienceDetails> {
+  async findUserById(
+    id: number,
+    authHeader?: string,
+  ): Promise<UserWithExperienceDetails> {
+    if (authHeader) {
+      const canAccessData = await this.authService.isUserAuthorizedToAccessData(
+        id,
+        authHeader,
+      );
+
+      if (!canAccessData)
+        throw new HttpException('Access forbidden', HttpStatus.FORBIDDEN);
+    }
+
     const user = await this.userRepository
       .createQueryBuilder('user')
       .innerJoinAndSelect('user.settings', 'settings')
       .where('user.id = :id', { id })
       .getOne();
-    const expDetails = this.calculateLevel(user.experience);
-
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    const expDetails = this.calculateLevel(user.experience);
     delete user['experience'];
     return {
       ...user,
@@ -65,8 +87,11 @@ export class UserService {
     return user;
   }
 
-  async findUserDonations(id: number): Promise<DonationEntity[]> {
-    await this.findUserById(id);
+  async findUserDonations(
+    id: number,
+    authHeader: string,
+  ): Promise<DonationEntity[]> {
+    await this.findUserById(id, authHeader);
 
     return await this.donationRepository.find({
       where: {
@@ -75,8 +100,11 @@ export class UserService {
     });
   }
 
-  async findUserCompletedFeats(id: number): Promise<UserCompletedFeat[]> {
-    await this.findUserById(id);
+  async findUserCompletedFeats(
+    id: number,
+    authHeader: string,
+  ): Promise<UserCompletedFeat[]> {
+    await this.findUserById(id, authHeader);
 
     const highestRankAchievedPerFeat =
       (await this.featCompletionRepository.query(
@@ -165,7 +193,15 @@ export class UserService {
     }
   }
 
-  async removeUser(id: number): Promise<void> {
+  async removeUser(id: number, authHeader: string): Promise<void> {
+    const canRemoveData = await this.authService.isUserAuthorizedToAccessData(
+      id,
+      authHeader,
+    );
+
+    if (!canRemoveData)
+      throw new HttpException('Access forbidden', HttpStatus.FORBIDDEN);
+
     await this.donationRepository
       .createQueryBuilder('donation')
       .softDelete()
@@ -183,32 +219,42 @@ export class UserService {
 
   async updateUser(
     id: number,
+    authHeader: string,
     dto: UpdateUserDto,
   ): Promise<UserWithExperienceDetails> {
-    await this.findUserById(id);
+    await this.findUserById(id, authHeader);
     const userSettings = (await this.userSettingRepository
       .createQueryBuilder('settings')
       .where('settings.user_id = :id', { id })
       .getOne()) as UserSettingEntity;
 
     try {
-      await this.userSettingRepository.update(
-        { id: userSettings.id },
-        {
-          theme: dto.theme,
-          font_size: dto.fontSize,
-          event_notifications: dto.eventNotifications,
-          reminder_notifications: dto.reminderNotifications,
-        },
-      );
+      if (
+        dto.theme ||
+        dto.fontSize ||
+        dto.eventNotifications ||
+        dto.reminderNotifications
+      ) {
+        await this.userSettingRepository.update(
+          { id: userSettings.id },
+          {
+            theme: dto.theme,
+            font_size: dto.fontSize,
+            event_notifications: dto.eventNotifications,
+            reminder_notifications: dto.reminderNotifications,
+          },
+        );
+      }
 
-      await this.userRepository.update(
-        { id },
-        {
-          email: dto.email,
-          username: dto.username,
-        },
-      );
+      if (dto.email || dto.username) {
+        await this.userRepository.update(
+          { id },
+          {
+            email: dto.email,
+            username: dto.username,
+          },
+        );
+      }
     } catch (error) {
       if (error.code === ErrorCodes.UNIQUE_VALUE) {
         const key = error.detail

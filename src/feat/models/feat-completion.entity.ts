@@ -25,7 +25,9 @@ export class FeatCompletionEntity {
     description: 'ID of user that has completed the feat',
     example: 2,
   })
-  @ManyToOne(() => UserEntity, user => user.achieved_feats)
+  @ManyToOne(() => UserEntity, user => user.achieved_feats, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
