@@ -7,8 +7,10 @@ import { LoginUserDto } from '../user/dto/login-user.dto';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserEntity } from '../user/models/user.entity';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import EmailService from '../email/email.service';
 
-describe('AuthController', () => {
+describe('AuthService', () => {
   const mockToken = 'mock_token';
 
   let authService: AuthService;
@@ -18,13 +20,31 @@ describe('AuthController', () => {
     createUser: jest.fn(),
   };
 
+  const mockConfigService = {
+    get: jest.fn(),
+  };
+
+  const mockEmailService = {
+    sendMail: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [AuthService, UserService, JwtService],
+      providers: [
+        AuthService,
+        UserService,
+        JwtService,
+        ConfigService,
+        EmailService,
+      ],
     })
       .overrideProvider(UserService)
       .useValue(mockUserService)
+      .overrideProvider(ConfigService)
+      .useValue(mockConfigService)
+      .overrideProvider(EmailService)
+      .useValue(mockEmailService)
       .compile();
 
     authService = module.get<AuthService>(AuthService);

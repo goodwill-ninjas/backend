@@ -3,6 +3,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserEntity } from '../user/models/user.entity';
+import EmailService from '../email/email.service';
+import { ConfigService } from '@nestjs/config';
 
 describe('AuthController', () => {
   const mockToken = 'mock_token';
@@ -19,6 +21,19 @@ describe('AuthController', () => {
           useValue: {
             register: jest.fn(),
             login: jest.fn(),
+            sendVerificationLink: jest.fn(),
+          },
+        },
+        {
+          provide: EmailService,
+          useValue: {
+            sendMail: jest.fn(),
+          },
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn(),
           },
         },
       ],

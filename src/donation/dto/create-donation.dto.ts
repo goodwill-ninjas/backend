@@ -92,7 +92,7 @@ export class CreateDonationDto {
   })
   @IsOptional()
   @IsEnum(ArmType)
-  arm: string;
+  arm?: string;
 
   @ApiProperty({
     description: 'Time of the donation',

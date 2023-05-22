@@ -2,16 +2,12 @@ import { DonationController } from './donation.controller';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DonationService } from './donation.service';
 import * as fc from 'fast-check';
+import { CreateDonationDto } from './dto/create-donation.dto';
 
 describe('DonationController', () => {
-  const exampleDonation = {
-    user_id: 720,
-    donated_type: 'whole',
-    amount: 450,
-    blood_pressure: '170/90',
-    donated_at: '2002-02-02T22:22:22.22Z',
-  };
+  const exampleDonation = new CreateDonationDto();
   const exampleId = 1;
+  const exampleAuthHeader = 'mock_token';
 
   let controller: DonationController;
 
@@ -48,21 +44,28 @@ describe('DonationController', () => {
   });
 
   it('Finds a donation', () => {
-    expect(controller.getDonation(exampleId)).toEqual({
+    expect(controller.getDonation(exampleId, exampleAuthHeader)).toEqual({
       id: exampleId,
       ...exampleDonation,
     });
   });
 
   it('Creates a donation', () => {
-    expect(controller.addDonation(exampleDonation)).resolves.toEqual({
+    expect(
+      controller.addDonation(exampleDonation, exampleAuthHeader),
+    ).resolves.toEqual({
       id: fc.integer(),
       ...exampleDonation,
     });
   });
 
   it('Should delete a donation', async () => {
-    await expect(controller.deleteDonation(exampleId)).resolves.not.toThrow();
-    expect(mockDonationService.removeDonation).toHaveBeenCalledWith(exampleId);
+    await expect(
+      controller.deleteDonation(exampleId, exampleAuthHeader),
+    ).resolves.not.toThrow();
+    expect(mockDonationService.removeDonation).toHaveBeenCalledWith(
+      exampleId,
+      exampleAuthHeader,
+    );
   });
 });
