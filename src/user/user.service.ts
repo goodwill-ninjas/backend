@@ -71,6 +71,7 @@ export class UserService {
 
     const expDetails = this.calculateLevel(user.experience);
     delete user['experience'];
+    delete user['password'];
     return {
       ...user,
       expDetails,

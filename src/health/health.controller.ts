@@ -9,11 +9,13 @@ import {
 } from '@nestjs/terminus';
 import {
   ApiBearerAuth,
+  ApiExcludeController,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @ApiTags('Base')
 @Controller('health')
 export class HealthController {
