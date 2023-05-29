@@ -11,6 +11,7 @@ import {
 import { UserEntity } from '../../user/models/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { IsOptional } from 'class-validator';
 
 @Entity('donation')
 export class DonationEntity {
@@ -44,9 +45,9 @@ export class DonationEntity {
 
   @ApiProperty({
     description: 'ID of user accompanying the requester',
-    example: 2,
     nullable: true,
   })
+  @IsOptional()
   @Column({ nullable: true })
   companion_user_id: number;
 
@@ -54,6 +55,7 @@ export class DonationEntity {
     nullable: true,
     onDelete: 'SET NULL',
   })
+  @IsOptional()
   @JoinColumn({ name: 'companion_user_id' })
   companion_user: UserEntity;
 
@@ -83,9 +85,9 @@ export class DonationEntity {
 
   @ApiProperty({
     description: 'Hemoglobin levels in g/l',
-    example: 140,
     nullable: true,
   })
+  @IsOptional()
   @Column({ nullable: true })
   hemoglobin: number;
 
@@ -100,7 +102,7 @@ export class DonationEntity {
 
   @ApiProperty({
     description: 'Which arm was used during donation',
-    example: 'Left',
+    example: 'left',
     nullable: true,
   })
   @Column({ nullable: true })
