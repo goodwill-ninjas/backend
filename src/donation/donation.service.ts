@@ -46,7 +46,6 @@ export class DonationService {
           "'disqualification_days' are mandatory when saving a disqualification",
           HttpStatus.BAD_REQUEST,
         );
-      if (dto.amount) dto.amount = 0;
     } else {
       if (!dto.amount)
         throw new HttpException(
@@ -66,6 +65,7 @@ export class DonationService {
     try {
       const newDonation = await this.donationRepository.create({
         ...donationDetails,
+        amount: dto.disqualified ? 0 : dto.amount,
         user,
       });
       await this.donationRepository.save(newDonation);
