@@ -43,18 +43,19 @@ export class DonationService {
     if (dto.disqualified) {
       if (!dto.disqualification_days)
         throw new HttpException(
-          'disqualification_days are mandatory when saving a disqualification',
+          '"disqualification_days" are mandatory when saving a disqualification',
           HttpStatus.BAD_REQUEST,
         );
+      if (dto.amount) dto.amount = 0;
     } else {
       if (!dto.amount)
         throw new HttpException(
-          'amount must be a number conforming to the specified constraints',
+          '"amount" must be a number conforming to the specified constraints',
           HttpStatus.BAD_REQUEST,
         );
       if (!dto.donated_type)
         throw new HttpException(
-          'donated_type must be one of the following values: whole, plasma, power, platelet',
+          '"donated_type" must be one of the following values: "whole", "plasma", "power", "platelet"',
           HttpStatus.BAD_REQUEST,
         );
     }
