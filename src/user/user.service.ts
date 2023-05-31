@@ -22,6 +22,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ExperienceDetails } from './interfaces/experience-details';
 import { UserWithExperienceDetails } from './dto/user-with-experience-details.dto';
 import { AuthService } from '../auth/auth.service';
+import { UserDonationInterval } from './interfaces/user-donation-interval';
 
 @Injectable()
 export class UserService {
@@ -51,7 +52,7 @@ export class UserService {
   async findUserById(
     id: number,
     authHeader?: string,
-  ): Promise<UserWithExperienceDetails> {
+  ): Promise<UserWithExperienceDetails & UserDonationInterval> {
     if (authHeader) {
       const canAccessData = await this.authService.isUserAuthorizedToAccessData(
         id,
@@ -69,12 +70,12 @@ export class UserService {
       .getOne();
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
-    const expDetails = this.calculateLevel(user.experience);
+    const exp_details = this.calculateLevel(user.experience);
     delete user['experience'];
     delete user['password'];
     return {
       ...user,
-      expDetails,
+      exp_details,
     };
   }
 
@@ -321,9 +322,9 @@ export class UserService {
 
     return {
       level: currentLevel,
-      currentExperience: experience,
-      minExperience: minExperience,
-      maxExperience: maxExperience,
+      current_experience: experience,
+      min_experience: minExperience,
+      max_experience: maxExperience,
     };
   }
 

@@ -90,5 +90,5 @@ export class UserWithExperienceDetails
       maxExperience: 99,
     },
   })
-  expDetails: ExperienceDetails;
+  exp_details: ExperienceDetails;
 }
