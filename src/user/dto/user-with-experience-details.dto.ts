@@ -7,7 +7,6 @@ import { IsEmail, IsEnum, IsString } from 'class-validator';
 import { BloodType } from '../../common/enum/blood-type.enum';
 import { GenderIdentity } from '../../common/enum/gender-identity.enum';
 import { ExperienceDetails } from '../interfaces/experience-details';
-import { Exclude } from 'class-transformer';
 
 export class UserWithExperienceDetails
   implements
