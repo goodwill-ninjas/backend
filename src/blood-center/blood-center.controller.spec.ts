@@ -5,10 +5,11 @@ import { BloodCenterEntity } from './models/blood-center.entity';
 import { BloodCenterDetailEntity } from './models/blood-center-detail.entity';
 import { SaveBloodCenterDetailsDto } from './dto/save-blood-center-details.dto';
 
-describe('DonationController', () => {
+describe('BloodCenterController', () => {
   const exampleBloodCenter = new BloodCenterEntity();
   const exampleBloodCenterDetails = new BloodCenterDetailEntity();
   const exampleCity = 'Test City';
+  const exampleAuthHeader = 'mock_token';
 
   let controller: BloodCenterController;
 
@@ -51,10 +52,11 @@ describe('DonationController', () => {
   it('Saves Blood Bank capacities', async () => {
     const dto = new SaveBloodCenterDetailsDto();
     await expect(
-      controller.createBloodDetailStatus(dto),
+      controller.createBloodDetailStatus(dto, exampleAuthHeader),
     ).resolves.not.toThrow();
     expect(mockBloodCenterService.saveBloodCenterDetails).toHaveBeenCalledWith(
       dto,
+      exampleAuthHeader,
     );
   });
 

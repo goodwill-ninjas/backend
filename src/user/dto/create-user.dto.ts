@@ -37,7 +37,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'User blood type',
-    example: 'AB-',
+    example: 'AB Rh-',
   })
   @IsNotEmpty()
   @IsEnum(BloodType)
@@ -53,10 +53,9 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'User avatar id',
-    example: 1,
     nullable: true,
   })
   @IsOptional()
   @IsNumber()
-  avatar_id: number;
+  avatar_id?: number;
 }

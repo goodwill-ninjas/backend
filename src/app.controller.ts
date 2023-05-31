@@ -2,11 +2,13 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import {
   ApiBearerAuth,
+  ApiExcludeController,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @ApiTags('Base')
 @Controller('status')
 export class AppController {

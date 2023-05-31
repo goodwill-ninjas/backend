@@ -72,7 +72,7 @@ export class CreateDonationDto {
     example: 140,
     nullable: true,
   })
-  @IsString()
+  @IsNumber()
   @IsOptional()
   hemoglobin?: number;
 
@@ -87,12 +87,12 @@ export class CreateDonationDto {
 
   @ApiProperty({
     description: 'Which arm was used during donation',
-    example: 'Left',
+    example: 'left',
     nullable: true,
   })
   @IsOptional()
   @IsEnum(ArmType)
-  arm: string;
+  arm?: string;
 
   @ApiProperty({
     description: 'Time of the donation',

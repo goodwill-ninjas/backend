@@ -15,6 +15,7 @@ import { UserService } from './user.service';
 import {
   ApiBearerAuth,
   ApiConflictResponse,
+  ApiExcludeEndpoint,
   ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -35,6 +36,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
+  @ApiExcludeEndpoint()
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get Users',

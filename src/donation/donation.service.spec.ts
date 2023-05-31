@@ -7,13 +7,15 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 
 describe('DonationService', () => {
   const exampleDonation = {
-    user_id: 720,
+    user_id: 1,
     donated_type: 'whole',
     amount: 450,
     blood_pressure: '170/90',
     donated_at: '2002-02-02T22:22:22.22Z',
+    disqualified: false,
   };
   const exampleId = 1;
+  const exampleAuthHeader = 'mock_token';
 
   let service: DonationService;
 
@@ -70,18 +72,23 @@ describe('DonationService', () => {
   });
 
   it('Should create donation', () => {
-    expect(service.createDonation(exampleDonation)).resolves.toEqual({
+    expect(
+      service.createDonation(exampleDonation, exampleAuthHeader),
+    ).resolves.toEqual({
       id: exampleId,
-      user: 720,
+      user: 1,
       donated_type: 'whole',
       amount: 450,
       blood_pressure: '170/90',
       donated_at: '2002-02-02T22:22:22.22Z',
+      disqualified: false,
     });
   });
 
   it('Should remove donation', async () => {
-    await expect(service.removeDonation(exampleId)).resolves.not.toThrow();
+    await expect(
+      service.removeDonation(exampleId, exampleAuthHeader),
+    ).resolves.not.toThrow();
     expect(mockDonationRepository.softDelete).toHaveBeenCalledWith(exampleId);
   });
 });

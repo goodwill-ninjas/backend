@@ -5,12 +5,14 @@ import { BloodCenterDetailEntity } from './models/blood-center-detail.entity';
 import { BloodCenterService } from './blood-center.service';
 import { SaveBloodCenterDetailsDto } from './dto/save-blood-center-details.dto';
 import { ParsedBloodCenterDetailRequest } from './interfaces/parsed-blood-center-detail.request';
+import { ConfigService } from '@nestjs/config';
 
-describe('DonationService', () => {
+describe('BloodCenterService', () => {
   const exampleBloodCenter = new BloodCenterEntity();
   const exampleParsedBloodCenterDetailRequest =
     [] as ParsedBloodCenterDetailRequest[];
   const exampleCity = 'Test City';
+  const exampleAuthHeader = 'mock_token';
 
   let service: BloodCenterService;
 
@@ -52,6 +54,12 @@ describe('DonationService', () => {
           provide: getRepositoryToken(BloodCenterDetailEntity),
           useValue: mockBloodCenterDetailRepository,
         },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockReturnValueOnce(exampleAuthHeader),
+          },
+        },
       ],
     }).compile();
 
@@ -90,7 +98,10 @@ describe('DonationService', () => {
       },
     };
     await expect(
-      service.saveBloodCenterDetails(<SaveBloodCenterDetailsDto>(<unknown>dto)),
+      service.saveBloodCenterDetails(
+        <SaveBloodCenterDetailsDto>(<unknown>dto),
+        exampleAuthHeader,
+      ),
     ).resolves.not.toThrow();
     expect(mockBloodCenterDetailRepository.create).toHaveBeenCalledTimes(8);
   });
