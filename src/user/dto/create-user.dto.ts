@@ -57,5 +57,5 @@ export class CreateUserDto {
   })
   @IsOptional()
   @IsNumber()
-  avatar_id: number;
+  avatar_id?: number;
 }
