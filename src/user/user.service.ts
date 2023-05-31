@@ -22,7 +22,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ExperienceDetails } from './interfaces/experience-details';
 import { UserWithExperienceDetails } from './dto/user-with-experience-details.dto';
 import { AuthService } from '../auth/auth.service';
-import { UserDonationInterval } from './interfaces/user-donation-interval';
 import { DonationType } from '../common/enum/donation-type.enum';
 import { addDays } from 'date-fns';
 
@@ -54,7 +53,7 @@ export class UserService {
   async findUserById(
     id: number,
     authHeader?: string,
-  ): Promise<UserWithExperienceDetails & UserDonationInterval> {
+  ): Promise<UserWithExperienceDetails> {
     if (authHeader) {
       const canAccessData = await this.authService.isUserAuthorizedToAccessData(
         id,

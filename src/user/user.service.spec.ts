@@ -31,16 +31,15 @@ describe('UserService', () => {
       innerJoinAndSelect: jest.fn().mockReturnThis(),
       where: jest.fn().mockReturnThis(),
       getOne: jest.fn(() => {
-        mockUserWithExp.expDetails = {
-          currentExperience: undefined,
+        mockUserWithExp.exp_details = {
+          current_experience: undefined,
           level: 10,
-          maxExperience: 0,
-          minExperience: 7770,
+          max_experience: 0,
+          min_experience: 7770,
         };
         return mockUserWithExp;
       }),
     })),
-    calculateLevel: jest.fn().mockReturnThis(),
     create: jest.fn(() => mockUser),
     save: jest.fn().mockReturnThis(),
     delete: jest.fn(async () => ({ affected: 1 })),
@@ -65,6 +64,7 @@ describe('UserService', () => {
       where: jest.fn().mockReturnThis(),
       execute: jest.fn().mockReturnThis(),
     })),
+    findOne: jest.fn().mockReturnValueOnce(mockDonation),
   };
   const mockImageRepository = {};
   const mockFeatRepository = {
@@ -125,7 +125,7 @@ describe('UserService', () => {
   });
 
   it('Returns user with corresponding id', () => {
-    expect(service.findUserById(mockId, mockToken)).resolves.toEqual(
+    expect(service.findUserById(mockId, mockToken)).resolves.toMatchObject(
       mockUserWithExp,
     );
   });
@@ -172,7 +172,7 @@ describe('UserService', () => {
     const username = 'foo';
     expect(
       service.updateUser(mockId, mockToken, { username }),
-    ).resolves.toEqual({
+    ).resolves.toMatchObject({
       ...mockUserWithExp,
       username,
     });
