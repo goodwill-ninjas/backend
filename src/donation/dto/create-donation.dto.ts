@@ -29,6 +29,14 @@ export class CreateDonationDto {
   disqualified: boolean;
 
   @ApiProperty({
+    description: 'Number of days for the disqualification period',
+    example: 14,
+  })
+  @IsNumber()
+  @IsOptional()
+  disqualification_days?: number;
+
+  @ApiProperty({
     description: 'ID of user accompanying the requester',
     example: 2,
     nullable: true,

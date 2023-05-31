@@ -44,6 +44,13 @@ export class DonationEntity {
   disqualified: boolean;
 
   @ApiProperty({
+    description: 'Number of days for the disqualification period',
+    example: 14,
+  })
+  @Column()
+  disqualification_days: number;
+
+  @ApiProperty({
     description: 'ID of user accompanying the requester',
     nullable: true,
   })
