@@ -39,6 +39,12 @@ jobs:
           labels: |
             triggered-by=github-action-cicd
 
+      - name: Run tests
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          target: test
+
       - name: Build the Docker image
         uses: docker/build-push-action@v4
         with:
