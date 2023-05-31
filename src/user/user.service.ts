@@ -76,6 +76,7 @@ export class UserService {
     return {
       ...user,
       exp_details,
+      can_donate_after: new Date(), // mock value
     };
   }
 
