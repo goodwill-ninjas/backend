@@ -90,5 +90,11 @@ export class UserWithExperienceDetails
       maxExperience: 99,
     },
   })
-  expDetails: ExperienceDetails;
+  exp_details: ExperienceDetails;
+
+  @ApiProperty({
+    description: 'Date after which user can donate blood once more',
+    example: '2002-02-02T22:22:22.22Z',
+  })
+  can_donate_after: Date;
 }

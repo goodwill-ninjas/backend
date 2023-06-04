@@ -22,6 +22,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ExperienceDetails } from './interfaces/experience-details';
 import { UserWithExperienceDetails } from './dto/user-with-experience-details.dto';
 import { AuthService } from '../auth/auth.service';
+import { DonationType } from '../common/enum/donation-type.enum';
+import { addDays } from 'date-fns';
 
 @Injectable()
 export class UserService {
@@ -69,12 +71,30 @@ export class UserService {
       .getOne();
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
+    const latestDonation = await this.donationRepository.findOne({
+      where: {
+        user_id: user.id,
+      },
+      order: { donated_at: 'DESC' },
+    });
+
     const expDetails = this.calculateLevel(user.experience);
+    const canDonateAfter = !latestDonation
+      ? null
+      : this.calculateIntervalPeriod(
+          latestDonation.disqualified,
+          latestDonation.donated_at,
+          latestDonation.disqualification_days,
+          latestDonation.donated_type,
+        );
+
     delete user['experience'];
     delete user['password'];
+
     return {
       ...user,
-      expDetails,
+      exp_details: expDetails,
+      can_donate_after: canDonateAfter,
     };
   }
 
@@ -321,10 +341,32 @@ export class UserService {
 
     return {
       level: currentLevel,
-      currentExperience: experience,
-      minExperience: minExperience,
-      maxExperience: maxExperience,
+      current_experience: experience,
+      min_experience: minExperience,
+      max_experience: maxExperience,
     };
+  }
+
+  private calculateIntervalPeriod(
+    isDisqualified: boolean,
+    lastDonationDate: Date,
+    disqualificationDays?: number,
+    donationType?: string,
+  ): Date {
+    const getDaysBasedOnDonationType = (type: string): number => {
+      switch (type) {
+        case DonationType.WHOLE_BLOOD:
+          return 56;
+        default:
+          return 28;
+      }
+    };
+
+    const days = isDisqualified
+      ? disqualificationDays
+      : getDaysBasedOnDonationType(donationType);
+
+    return addDays(lastDonationDate, days);
   }
 
   async updateUserEmailVerification(id: number): Promise<UpdateResult> {

@@ -1,6 +1,6 @@
 export interface ExperienceDetails {
   level: number;
-  currentExperience: number;
-  minExperience: number;
-  maxExperience: number;
+  current_experience: number;
+  min_experience: number;
+  max_experience: number;
 }
